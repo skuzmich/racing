@@ -7,3 +7,6 @@ project ($(project))
 include_directories("${PROJECT_BINARY_DIR}")
 
 add_subdirectory (graphics)
+
+# Third Party
+add_subdirectory(third_party)
