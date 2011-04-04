@@ -16,15 +16,14 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-#include "../Framework/Test.h"
-#include "../Framework/Render.h"
+#include "framework/Test.h"
+#include "framework/Render.h"
 #include "freeglut/GL/glut.h"
-#include <cstring>
 
-#include "Racing2D.h"
+#include "RacingTest.h"
 
 TestEntry g_testEntries[] =
 {
-	{"Racing2D", Racing2D::Create},
+        {"RacingTest", RacingTest::Create},
 	{NULL, NULL}
 };

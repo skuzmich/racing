@@ -1,9 +1,5 @@
-#ifndef TRACK_H
-#define TRACK_H
-
-#include <stdio.h>
-#include "Lib.h"
-#include <vector>
+#ifndef PHYSICS_LIB_TRACK_H
+#define PHYSICS_LIB_TRACK_H
 
 class Wall;
 class SandField;
@@ -69,28 +65,5 @@ class SandField{
     Track* track;
 };
 
-Track::Track(b2World *m_world, char* track_path){
-    k_restitution = 0.4f;
-    world = m_world;
-    b2BodyDef bd;
-    bd.position.Set(0.0f, 0.0f);
-    ground = world->CreateBody(&bd);
-    sandfield= world->CreateBody(&bd);
-    
-    std::ifstream myfile (track_path);
-    std::vector<float> vec;
-    while ( ! GetNextVectorFromFile<float>(&vec,&myfile, 4))
-        walls_list.push_back(new Wall(vec[0], vec[1], vec[2],vec[3],ground));
-    
-    int count = 3;
-    while (! GetNextVectorFromFile<float>(&vec,&myfile, count * 2)){
-        b2Vec2 *vertices = (b2Vec2*) malloc(count * sizeof(b2Vec2));
-        for (int i = 0; i < count; i++){
-            vertices[i].Set(vec[2*i],vec[2*i+1]);
-            printf("==%f %f\n", vec[2*i], vec[2*i+1]);
-        }
-        sandfields_list.push_back(new SandField(vertices,count,this));
-    }
-}
 
-#endif /* TRACK_H */ 
+#endif /* PHYSICS_LIB_TRACK_H */

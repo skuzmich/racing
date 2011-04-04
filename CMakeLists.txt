@@ -1,12 +1,10 @@
+#/trunk/
+
 cmake_minimum_required(VERSION 2.6)
 
-set (PROJECT racing)
+project (racing2d)
 
-project ($(project))
-
-set (THIRD_PARTY_DIR third_party)
-
-include_directories("${PROJECT_BINARY_DIR}")
+#include_directories("${PROJECT_BINARY_DIR}")
 
 add_subdirectory (graphics)
 
