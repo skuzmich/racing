@@ -3,6 +3,8 @@
 
 class Wheel;
 class Track;
+struct car_coordinates;
+struct car_control_keys;
 
 class Car{
   private:
@@ -24,6 +26,8 @@ class Car{
     Car(b2World *m_world, float32 x, float32 y,Track *m_track);
     ~Car();
     void Loop();
+    car_coordinates GetCoordinates();
+    void SetKeys(car_control_keys keys);
     friend class Wheel;
 };
 

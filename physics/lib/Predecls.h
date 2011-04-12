@@ -13,6 +13,19 @@ struct ObjData{
     int level;
 };
 
+struct car_coordinates{
+  float x;
+  float y;
+  float angle;
+};
+
+struct car_control_keys{
+  bool left;
+  bool right;
+  bool up;
+  bool down;
+};
+
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -24,6 +37,5 @@ struct ObjData{
 #include "Car.h"
 #include "EndContacts.h"
 #include "BeginContacts.h"
-
 
 #endif  //  PHYSICS_LIB_PREDECLS_H

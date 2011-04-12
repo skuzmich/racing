@@ -1,15 +1,15 @@
 #include "Predecls.h"
 
 Car::Car(b2World *m_world, float32 x, float32 y,Track *m_track){
-  steer_speed = 50;
-  horsepowers = 1500;
+  steer_speed = 20;
+  horsepowers = 1000;
   steering_angle = 0;
   engine_speed = 0;
-  max_steer_angle = 3.1415f / 10.0f;
+  max_steer_angle = 3.1415f / 20.0f;
   world = m_world; 
   track = m_track;
   position = b2Vec2(x,y);
-  
+
   b2BodyDef car_body_def;
   car_body_def.position.Set(x,y);
 
@@ -34,7 +34,6 @@ Car::Car(b2World *m_world, float32 x, float32 y,Track *m_track){
   data.level=15;
   sd.userData = (void*) &data;
 
-  //sd.filter.groupIndex = -1;
   car_body_def.type = b2_dynamicBody;
   car_body_def.angularDamping = 5.0f;
   car_body_def.linearDamping = 3.1f;
@@ -63,6 +62,39 @@ void Car::Loop(){
 
   left_wheel->Driving();
   right_wheel->Driving();
+}
+
+car_coordinates Car::GetCoordinates(){
+  car_coordinates coordinates;
+  b2Vec2 b2coordinates = body->GetPosition();
+  float32 b2angle = body->GetAngle();
+  
+  coordinates.x = (float) b2coordinates(0);
+  coordinates.y = (float) b2coordinates(1);
+  coordinates.angle = (float) b2angle;
+
+  return coordinates;
+}
+
+void Car::SetKeys(car_control_keys keys){
+  if (keys.left)
+    steering_angle = -max_steer_angle;
+  
+  if (keys.right)
+    steering_angle = +max_steer_angle;
+  
+  if (! (keys.right || keys.left))
+    steering_angle = 0;
+
+  if (keys.up)
+    engine_speed = horsepowers;
+  
+  if (keys.down)
+    engine_speed = -horsepowers;
+  
+  if (! (keys.down || keys.up))
+    engine_speed = 0;
+
 }
 
 Wheel::Wheel(Car *wheel_car,
@@ -95,18 +127,16 @@ Wheel::Wheel(Car *wheel_car,
   body->CreateFixture(&fd);
 
   if (is_rear){
-
     b2DistanceJointDef jointDef;
     jointDef.Initialize(car->body, body, body->GetWorldCenter(),body->GetWorldCenter());
     jointDef.collideConnected = true;
     b2DistanceJoint* d_joint = (b2DistanceJoint*) car->world->CreateJoint(&jointDef);
-
     b2PrismaticJointDef joint_def;
     b2Vec2 worldAxis(0.0f, 0.0f);
     joint_def.Initialize(car->body, body, body->GetWorldCenter(), worldAxis);
     joint_def.enableLimit = true;
-    joint_def.lowerTranslation = -0.0001f;
-    joint_def.upperTranslation = 0.0001f;
+//  joint_def.lowerTranslation = -0.0001f;
+//  joint_def.upperTranslation = 0.0001f;
     p_joint = (b2PrismaticJoint*) car->world->CreateJoint(&joint_def);
   } else {
     b2RevoluteJointDef joint_def;
@@ -120,7 +150,7 @@ Wheel::Wheel(Car *wheel_car,
 void Wheel::DriftingControl(){
   b2Vec2 velocity = body->GetLinearVelocityFromLocalPoint(b2Vec2(0.0f,0.0f));
   float32 angle = body->GetAngle();
-  b2Vec2 body_axis = b2Vec2(cos(angle),sin(angle)); 
+  b2Vec2 body_axis = b2Vec2(cos(angle)*0.5,sin(angle)*0.5); 
   b2Vec2 orthogonal_velocity = b2Dot(velocity,body_axis) * body_axis; 
   velocity = velocity - orthogonal_velocity;
   body->SetLinearVelocity(velocity);
@@ -133,3 +163,4 @@ void Wheel::Driving(){
   float32 mspeed = car->steering_angle - r_joint->GetJointAngle();
   r_joint->SetMotorSpeed(mspeed * car->steer_speed);
 } 
+

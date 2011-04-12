@@ -1,6 +1,5 @@
 #/turnk/graphics
 
-set (PROJECT graphics)
 set (TEST graphics_test)
 
 Find_Package (SDL REQUIRED)
@@ -34,10 +33,8 @@ endif ( NOT SDL_FOUND )
 
 link_libraries ( ${GRAPHICS_LIBRARYS} )
 
-#adding SLD include directories
-add_definitions(`sdl-config --cflags`)
 
-add_library (${PROJECT} ${HEADERS} ${SOURCES})
+add_library (graphics_lib ${HEADERS} ${SOURCES})
 
 add_executable (graphics_test ${TESTS})
 
