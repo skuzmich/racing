@@ -15,6 +15,7 @@ add_definitions(`sdl-config --cflags`)
 #include_directories("${PROJECT_BINARY_DIR}")
 
 add_subdirectory (graphics)
+add_subdirectory (base)
 
 # Third Party
 add_subdirectory(third_party)
