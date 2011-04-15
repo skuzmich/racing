@@ -6,22 +6,37 @@
  *  Copyright 2011 МФТИ(*
  */
 
+#include <assert.h>
+
 #include "ClientData.h"
 
-bool ClientData::GetKeyPressed (bool[4] keys) {
-  for (int i = 0; i < ; i++)
-    keys[i] = (key_pressed_ >> i) & 0x1;
+bool ClientData::GetKeyPressed (std::vector<bool> &keys) {
+	if (keys.size() != 4)
+  	return false;
+  short pos = 0;
+  for (std::vector<bool>::iterator i = keys.begin();
+  		i != keys.end(); i++) {
+    *i = (key_pressed_ >> pos) & 0x1;
+    pos++;
+	}
   return true;
 }
 
-bool ClientData::SetKeyPressed (bool[4] keys) {
-  for (int i = 0; i < 4; i++)
-    if (keys[i] > 0)
-     key_presses_ |= 0x1 << i;
-    else if (keys[i] == 0)
-       i &= (0xff << (i + 1)) | (0xff >> (sizeof(char) - i));
+bool ClientData::SetKeyPressed (std::vector<bool> &keys) {
+	short pos = 0;
+  for (std::vector<bool>::iterator i = keys.begin();
+  		i != keys.end();
+      i++) {
+
+    if ((*i) > 0)
+     key_pressed_ |= 0x1 << pos;
+    else if ((*i) == 0)
+       key_pressed_ &= (0xff << (pos + 1)) | (0xff >> (sizeof(char) - pos));
     else
       return false;
+    pos++;
+	}
+
   return true;
 }
 
@@ -39,13 +54,12 @@ bool ClientData::SetPosition (const struct CarPosition * pos) {
   return true;
 }
 
-bool ClientData::GetPosition (struct CarPosition * pos) {
-  if (pos == NULL)
-    return false;
+const struct CarPosition * ClientData::GetPosition () {
 
-  if (my_position_ == NULL)
-    return false;
+	if (my_position_ == NULL)
+    return NULL;
 
+	struct CarPosition * pos = new struct CarPosition;
   pos->x = my_position_->x;
   pos->y = my_position_->y;
   pos->angle = my_position_->angle;
@@ -53,14 +67,14 @@ bool ClientData::GetPosition (struct CarPosition * pos) {
   pos->steer_speed = my_position_->steer_speed;
   pos->time = my_position_->time;
 
-  return true;
+  return pos;
 }
 
-ClientData::ClientData (const char * ip,
-    unsigned port,
+ClientData::ClientData (const SockAddr * m_addr,
     float init_x,
     float init_y,
     float init_angle) {
+	assert(m_addr != NULL);
   my_position_ = new struct CarPosition;
   my_position_->x = init_x;
   my_position_->y = init_y;
@@ -69,13 +83,14 @@ ClientData::ClientData (const char * ip,
   my_position_->steer_speed = 0.;
   my_position_->time = 0.;
 
-  my_addr_ = new SockAddr(ip, port);
+  my_addr_ = new SockAddr((const_cast<SockAddr *>(m_addr))->GetIP(),
+  		(const_cast<SockAddr *>(m_addr))->GetPort());
 
   key_pressed_ = 0;
 }
 
 ClientData::ClientData () {
-  my_position = new struct CarPosition;
+  my_position_ = new struct CarPosition;
   my_addr_ = new SockAddr();
   key_pressed_ = 0;
 }

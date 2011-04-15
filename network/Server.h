@@ -10,6 +10,8 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include <map>
+
 #include <sys/select.h>
 
 #include "Socket.h"
@@ -28,6 +30,7 @@ class Server {
     int Recv();
 
 		// После создания сервер ждет каждого нового клиента с указанным таймаутом.
+    // После создания вызвать Synhronize().
 		explicit Server (const char * ip, unsigned port, int timeout_sec,
     		int timeout_microsec, int timeout_total);
 
@@ -35,14 +38,15 @@ class Server {
     		int timeout_microsec, int timeout_total);
 
     Server ();
-
-		~Server();
+ 
+		~Server ();
 
 		// колличество клиентов, с которыми произведена синхронизация.
 		int Synhronize();
 
 	protected:
 		struct timeval timeout;
+
 		// информация о клиентах.
 		std::map<SockAddr *, ClientData *> clients_;
 

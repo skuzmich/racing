@@ -12,6 +12,8 @@
 
 #include "Socket.h"
 
+#include <vector>
+
 struct CarPosition {
   float x;
   float y;
@@ -19,7 +21,7 @@ struct CarPosition {
   float speed;
   float steer_speed;
   float time;
-}
+};
 
 class ClientData {
   private:
@@ -36,7 +38,7 @@ class ClientData {
     
   public:
     bool SetPosition (const struct CarPosition * pos);
-    bool GetPosition (struct CarPosition * pos);
+    const struct CarPosition * GetPosition ();
 
   	const SockAddr * GetAddr ();
 
@@ -44,15 +46,13 @@ class ClientData {
     // [1] - right,
     // [2] - up,
     // [3] - down.
-  	bool GetKeyPressed (std::vector<bool> * keys);
-    bool SetKeyPressey (std::vector<bool> * keys);
+  	bool GetKeyPressed (std::vector<bool> &keys);
+    bool SetKeyPressed (std::vector<bool> &keys);
 
-    explicit ClientData (const char * ip,
-        unsigned port,
-        float init_x,
-        float init_y);
+    explicit ClientData (const SockAddr * m_addr, float init_x, float init_y,
+    		float init_angle);
     ClientData ();
 		virtual ~ClientData ();
-}
+};
 
 #endif // CLIENTDATA_H
