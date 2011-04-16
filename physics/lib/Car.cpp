@@ -1,11 +1,17 @@
 #include "Predecls.h"
 
-Car::Car(b2World *m_world, float32 x, float32 y,Track *m_track){
-  steer_speed = 10;
-  horsepowers = 400;
+Car::Car(b2World *m_world,
+         float32 x,
+         float32 y,
+         Track *m_track,
+         float32 new_horsepowers,
+         float32 new_steer_speed,
+         float32 new_max_steer_angle){
+  steer_speed = new_steer_speed;
+  horsepowers = new_horsepowers;
   steering_angle = 0;
   engine_speed = 0;
-  max_steer_angle = 3.1415f / 6.0f;
+  max_steer_angle = new_max_steer_angle;
   world = m_world; 
   track = m_track;
   position = b2Vec2(x,y);
@@ -14,6 +20,8 @@ Car::Car(b2World *m_world, float32 x, float32 y,Track *m_track){
   car_body_def.position.Set(x,y);
 
   b2Vec2 vertices[8];
+  
+  /*
   vertices[0] = b2Vec2(-1.5f, -2.4f);
   vertices[1] = b2Vec2(-1.2f, -2.8f);
   vertices[2] = b2Vec2(-0.7f, -3.0f);
@@ -22,7 +30,17 @@ Car::Car(b2World *m_world, float32 x, float32 y,Track *m_track){
   vertices[5] = b2Vec2(1.5f, -2.4f);
   vertices[6] = b2Vec2(1.5f, 2.6f);
   vertices[7] = b2Vec2(-1.5f, 2.6f);
-
+  */
+  
+  vertices[0] = b2Vec2(-1.5f * 2.286, -2.4f*2.286);
+  vertices[1] = b2Vec2(-1.2f*2.286, -2.8f*2.286);
+  vertices[2] = b2Vec2(-0.7f*2.286, -3.05*2.286);
+  vertices[3] = b2Vec2(0.7f*2.286, -3.0f*2.286);
+  vertices[4] = b2Vec2(1.2f*2.286, -2.8f*2.286);
+  vertices[5] = b2Vec2(1.5f*2.286, -2.4f*2.286);
+  vertices[6] = b2Vec2(1.5f*2.286, 2.6f*2.286);
+  vertices[7] = b2Vec2(-1.5f*2.286, 2.6f*2.286);
+   
   b2PolygonShape car_poly_shape;
   car_poly_shape.Set(vertices, 8);
 
@@ -41,10 +59,10 @@ Car::Car(b2World *m_world, float32 x, float32 y,Track *m_track){
   body = world->CreateBody(&car_body_def);
   body->CreateFixture(&sd);
 
-  left_wheel = new Wheel(this,x - 1.4f, y - 1.9f, false,track);
-  right_wheel = new Wheel(this,x + 1.4f, y - 1.9f, false,track);
-  left_rear_wheel = new Wheel(this,x - 1.4f, y + 1.9f, true,track);
-  right_rear_wheel = new Wheel(this,x + 1.4f, y + 1.9f, true,track);
+  left_wheel = new Wheel(this,x - 1.4f*2.286, y - 1.9f*2.286, false,track);
+  right_wheel = new Wheel(this,x + 1.4f*2.286, y - 1.9f*2.286, false,track);
+  left_rear_wheel = new Wheel(this,x - 1.4f*2.286, y + 1.9f*2.286, true,track);
+  right_rear_wheel = new Wheel(this,x + 1.4f*2.286, y + 1.9f*2.286, true,track);
 }
 
 Car::~Car(){
@@ -105,8 +123,8 @@ Wheel::Wheel(Car *wheel_car,
     ,Track *m_track){
   track = m_track;
   car = wheel_car;
-  float32 size_x = 0.2f;
-  float32 size_y = 0.5f;
+  float32 size_x = 0.2f*2.286;
+  float32 size_y = 0.5f*2.286;
   b2BodyDef bd;
   bd.position.Set(x,y);
   bd.type = b2_dynamicBody;
@@ -136,8 +154,6 @@ Wheel::Wheel(Car *wheel_car,
     b2Vec2 worldAxis(0.0f, 0.0f);
     joint_def.Initialize(car->body, body, body->GetWorldCenter(), worldAxis);
     joint_def.enableLimit = true;
-//  joint_def.lowerTranslation = -0.0001f;
-//  joint_def.upperTranslation = 0.0001f;
     p_joint = (b2PrismaticJoint*) car->world->CreateJoint(&joint_def);
   } else {
     b2RevoluteJointDef joint_def;
@@ -151,7 +167,7 @@ Wheel::Wheel(Car *wheel_car,
 void Wheel::DriftingControl(){
   b2Vec2 velocity = body->GetLinearVelocityFromLocalPoint(b2Vec2(0.0f,0.0f));
   float32 angle = body->GetAngle();
-  b2Vec2 body_axis = b2Vec2(cos(angle)*0.5,sin(angle)*0.5); 
+  b2Vec2 body_axis = b2Vec2(cos(angle),sin(angle)); 
   b2Vec2 orthogonal_velocity = b2Dot(velocity,body_axis) * body_axis; 
   velocity = velocity - orthogonal_velocity;
   body->SetLinearVelocity(velocity);

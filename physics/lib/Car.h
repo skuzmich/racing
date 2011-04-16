@@ -23,7 +23,14 @@ class Car{
     float32 horsepowers;
     float32 steer_speed;
     float32 max_steer_angle;
-    Car(b2World *m_world, float32 x, float32 y,Track *m_track);
+    Car(b2World *m_world,
+        float32 x,
+        float32 y,
+        Track *m_track,
+        float32 new_horsepowers = 1400,
+        float32 new_steer_speed = 10,
+        float32 new_max_steer_angle = 3.1415 / 5.);
+
     ~Car();
     void Loop();
     car_coordinates GetCoordinates();

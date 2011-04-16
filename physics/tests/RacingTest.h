@@ -11,8 +11,8 @@ public:
         m_world->SetGravity(b2Vec2(0.0f, 0.0f));
         
         track = new Track(m_world, "track.txt");
-        car = new Car(m_world, 0.0f, 0.0f,track);
-        car1 = new Car(m_world, 2.0f, 2.0f,track);
+        car = new Car(m_world, 100.0f, 100.0f,track);
+        car1 = new Car(m_world, 200.0f, 100.0f,track);
         printf("End RacingTest!\n");
     }
 
