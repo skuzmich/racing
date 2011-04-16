@@ -14,7 +14,7 @@ set (
   GL
 )
 
-set (HEADERS CGraphics.h)
+set (HEADERS CGraphics.h GPInterface.h)
 
 set (
   SOURCES  
@@ -22,6 +22,7 @@ set (
   CCar.cpp
   CGraphics.cpp
   common.cpp
+  GPInterface.cpp
 )
 
 set (TESTS ${SOURCES} GraphTest.cpp)
@@ -38,4 +39,4 @@ add_library (graphics_lib ${HEADERS} ${SOURCES})
 
 add_executable (graphics_test ${TESTS})
 
-target_link_libraries(graphics_test ${PROJECT} )
+target_link_libraries(graphics_test base_lib)

@@ -3,12 +3,14 @@
 #include "Predecls.h"
 #include "CGraphics.h"
 #include "Event.h"
+#include "GPInterface.h"
 
 int main(int argc, char** argv){
   
   CGraphics *gr = CGraphics::Create(640, 480);
   assert(gr);
-  bool Running = true;
+  //bool Running = true;
+  
   gr->AddCar(100, 100, 60, "./gfx/car1.png");
 //gr->AddCar(150, 150, 60, "./gfx/car2.png");
     

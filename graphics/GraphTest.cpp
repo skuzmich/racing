@@ -1,4 +1,6 @@
 #include "CGraphics.h"
+#include "Event.h"
+#include "GPInterface.h"
 
 void SetCoords(int *X, int *Y, float *a){
   static int Xcoord = 100, Ycoord = 100;
@@ -12,22 +14,32 @@ void SetCoords(int *X, int *Y, float *a){
 }
 
 int main(int argc, char* argv[]) {
-  CGraphics *gr = CGraphics::Create(640, 480);
+  // Some parameters for testing
+  int test_w = 1024;
+  int test_h = 768;
+  int test_phys_w = 400;
+  int test_phys_h = 300;
+  
+  CGraphics *gr = CGraphics::Create(test_w, test_h);
   assert(gr);
-  int cX, cY;
-  float ang;
-  bool Running;
+  // Variable coordinates of car
+  float cX = 200, cY = 150;
+  float ang = 0;
   gr->AddCar(100, 100, 60, "./gfx/car1.png");
-  gr->AddCar(150, 150, 60, "./gfx/car2.png");
-  SDL_Event Event;
-
-  while(Running) {
-    while(SDL_PollEvent(&Event)) {
-      if(Event.type == SDL_QUIT) Running = false;
-    }
-    SetCoords(&cX, &cY, &ang);
-    gr->SetCoordinates(1, cX, cY, ang);
-    gr->SetCoordinates(2, cX+50, cY+50, ang);
+  // 
+  Event new_event;
+  // Initialization of interface between graphics and physics (GPInterface)
+  GPInterface gpi;
+  gpi.Init(test_w, test_h, test_phys_w, test_phys_h);
+  
+  gr->SetCoordinates(1,
+                    gpi.gr_coordinate_x(cX),
+                    gpi.gr_coordinate_y(cY),
+                    ang);
+                    
+ // printf("%d %d\n", gpi.gr_coordinate_x(cX), gpi.gr_coordinate_y(cY));
+  while(new_event.running()) {
+    new_event.CheckEvents();
     gr->Render();
     SDL_Delay(10);
   }
