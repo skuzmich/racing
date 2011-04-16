@@ -6,4 +6,4 @@ set (SOURCES main.cpp)
 
 add_executable (app ${SOURCES})
 
-target_link_libraries(app physics_lib graphics_lib Box2D)
+target_link_libraries(app physics_lib graphics_lib base_lib Box2D)

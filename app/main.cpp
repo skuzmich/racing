@@ -41,7 +41,7 @@ int main(int argc, char** argv){
     car_control_keys keys;
     
     // Get state of control keys
-    keys = my_event.control_keys_state();
+    keys = new_event.control_keys_state();
 
     car->SetKeys(keys);
     car->Loop();
