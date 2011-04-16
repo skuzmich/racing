@@ -2,6 +2,7 @@
 
 #include "Predecls.h"
 #include "CGraphics.h"
+#include "Event.h"
 
 int main(int argc, char** argv){
   
@@ -10,8 +11,7 @@ int main(int argc, char** argv){
   bool Running = true;
   gr->AddCar(100, 100, 60, "./gfx/car1.png");
 //gr->AddCar(150, 150, 60, "./gfx/car2.png");
-  SDL_Event Event;
-  
+    
   // Define the gravity vector.
   b2Vec2 gravity(0.0f, 0.0f);
 
@@ -29,25 +29,19 @@ int main(int argc, char** argv){
   Car * car = new Car(&world, 300.0f, 300.0f,track);
 
   int i;
-  while(Running) {
-    while(SDL_PollEvent(&Event)) {
-      if(Event.type == SDL_QUIT) Running = false;
-    }
+  Event new_event; // new_event.running_ is 'true' by default
+  
+  while(new_event.running()) {
+    // Browse all the events (SDL_Events)
+    // In case of quit-event, new_event.running_ sets to 'false'
+    new_event.CheckEvents();
+    // After calling CheckEvents(), new_event.control_keys_state_ sets to actual
+    // value according to pressed keys on keyboard
+    
     car_control_keys keys;
-
-    // Some test's
-    if (i < 400){
-      keys.up = true;
-    keys.left = false;
-      i++;
-      printf ("i = %i \n", i);
-    } else {
-      if (i % 2) keys.up = false;
-
-      keys.left = true;
-    }
-    keys.down = false;
-    keys.right = false;
+    
+    // Get state of control keys
+    keys = my_event.control_keys_state();
 
     car->SetKeys(keys);
     car->Loop();

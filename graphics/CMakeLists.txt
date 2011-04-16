@@ -1,4 +1,4 @@
-#/turnk/graphics
+#/trunk/graphics
 
 set (TEST graphics_test)
 
