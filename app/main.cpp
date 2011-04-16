@@ -10,7 +10,7 @@ int main(int argc, char** argv){
   int window_w = 640;
   int window_h = 480;
 
-  CGraphics *gr = CGraphics::Create(640, 480);
+  CGraphics *gr = CGraphics::Create(window_w, window_h);
   assert(gr);
   //bool Running = true;
   
