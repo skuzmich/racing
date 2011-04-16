@@ -1,11 +1,11 @@
 #include "Predecls.h"
 
 Car::Car(b2World *m_world, float32 x, float32 y,Track *m_track){
-  steer_speed = 20;
-  horsepowers = 1000;
+  steer_speed = 10;
+  horsepowers = 400;
   steering_angle = 0;
   engine_speed = 0;
-  max_steer_angle = 3.1415f / 20.0f;
+  max_steer_angle = 3.1415f / 6.0f;
   world = m_world; 
   track = m_track;
   position = b2Vec2(x,y);
@@ -35,8 +35,8 @@ Car::Car(b2World *m_world, float32 x, float32 y,Track *m_track){
   sd.userData = (void*) &data;
 
   car_body_def.type = b2_dynamicBody;
-  car_body_def.angularDamping = 5.0f;
-  car_body_def.linearDamping = 3.1f;
+  car_body_def.angularDamping = 1.0f;
+  car_body_def.linearDamping = 1.1f;
 
   body = world->CreateBody(&car_body_def);
   body->CreateFixture(&sd);
@@ -82,18 +82,19 @@ void Car::SetKeys(car_control_keys keys){
   
   if (keys.right)
     steering_angle = +max_steer_angle;
-  
+   
   if (! (keys.right || keys.left))
-    steering_angle = 0;
+   steering_angle = 0;
 
-  if (keys.up)
+  if (keys.up) 
     engine_speed = horsepowers;
   
   if (keys.down)
     engine_speed = -horsepowers;
   
+  
   if (! (keys.down || keys.up))
-    engine_speed = 0;
+  engine_speed = 0;
 
 }
 
