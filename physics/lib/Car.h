@@ -52,7 +52,8 @@ class Wheel{
         float32 y, 
         bool is_rear,
         Track *m_track);
-
+    
+    bool rear;
     void DriftingControl();
     void Driving();
     friend class Car;

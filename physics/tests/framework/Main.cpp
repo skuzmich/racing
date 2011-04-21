@@ -136,25 +136,25 @@ void KeyboardSpecial(int key, int x, int y)
         switch (key)
         {
         case GLUT_KEY_LEFT:
-                viewCenter.x -= 0.5f;
+                viewCenter.x -= 5.5f;
                 Resize(width, height);
                 break;
 
                 // Press right to pan right.
         case GLUT_KEY_RIGHT:
-                viewCenter.x += 0.5f;
+                viewCenter.x += 5.5f;
                 Resize(width, height);
                 break;
 
                 // Press down to pan down.
         case GLUT_KEY_DOWN:
-                viewCenter.y -= 0.5f;
+                viewCenter.y -= 5.5f;
                 Resize(width, height);
                 break;
 
                 // Press up to pan up.
         case GLUT_KEY_UP:
-                viewCenter.y += 0.5f;
+                viewCenter.y += 5.5f;
                 Resize(width, height);
                 break;
 

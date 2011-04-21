@@ -44,7 +44,7 @@ int GetNextVectorFromFile(std::vector<T> *ret,std::ifstream *myfile, int size){
                 T f;
                 if(from_string<T>(f, vec[i], std::dec))
                 {
-                    ret->push_back(f);
+                    ret->push_back(f-5.5);
                     std::cout << f << std::endl;
                 }
                 else

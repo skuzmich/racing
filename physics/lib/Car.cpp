@@ -53,8 +53,8 @@ Car::Car(b2World *m_world,
   sd.userData = (void*) &data;
 
   car_body_def.type = b2_dynamicBody;
-  car_body_def.angularDamping = 1.0f;
-  car_body_def.linearDamping = 1.1f;
+  // car_body_def.angularDamping = 1.1f;
+  // car_body_def.linearDamping = 1.1f;
 
   body = world->CreateBody(&car_body_def);
   body->CreateFixture(&sd);
@@ -77,10 +77,12 @@ void Car::Loop(){
   right_wheel->DriftingControl();
   left_rear_wheel->DriftingControl();
   right_rear_wheel->DriftingControl();
-
+  
   left_wheel->Driving();
   right_wheel->Driving();
+
 }
+
 
 car_coordinates Car::GetCoordinates(){
   car_coordinates coordinates;
@@ -105,7 +107,7 @@ void Car::SetKeys(car_control_keys keys){
    steering_angle = 0;
 
   if (keys.up) 
-    engine_speed = horsepowers;
+    engine_speed = +horsepowers;
   
   if (keys.down)
     engine_speed = -horsepowers;
@@ -121,6 +123,7 @@ Wheel::Wheel(Car *wheel_car,
     float32 y, 
     bool is_rear
     ,Track *m_track){
+  rear = is_rear;
   track = m_track;
   car = wheel_car;
   float32 size_x = 0.2f*2.286;
@@ -128,8 +131,8 @@ Wheel::Wheel(Car *wheel_car,
   b2BodyDef bd;
   bd.position.Set(x,y);
   bd.type = b2_dynamicBody;
-  bd.angularDamping = 5.0f;
-  bd.linearDamping = 0.1f;
+  bd.angularDamping = 2.0f;
+  bd.linearDamping = 5.5f;
 
   bd.allowSleep = false;
   body = car->world->CreateBody(&bd);
@@ -145,32 +148,29 @@ Wheel::Wheel(Car *wheel_car,
   fd.userData = (void*) &data;
   body->CreateFixture(&fd);
 
-  if (is_rear){
-    b2DistanceJointDef jointDef;
-    jointDef.Initialize(car->body, body, body->GetWorldCenter(),body->GetWorldCenter());
-    jointDef.collideConnected = true;
-    b2DistanceJoint* d_joint = (b2DistanceJoint*) car->world->CreateJoint(&jointDef);
-    b2PrismaticJointDef joint_def;
-    b2Vec2 worldAxis(0.0f, 0.0f);
-    joint_def.Initialize(car->body, body, body->GetWorldCenter(), worldAxis);
-    joint_def.enableLimit = true;
-    p_joint = (b2PrismaticJoint*) car->world->CreateJoint(&joint_def);
-  } else {
     b2RevoluteJointDef joint_def;
     joint_def.Initialize(car->body,body,body->GetWorldCenter());
+   
+    if (is_rear){
+    joint_def.enableLimit = true;
+    joint_def.upperAngle = joint_def.lowerAngle = 0;
+    
+    } else {
     joint_def.enableMotor = true;
     joint_def.maxMotorTorque = 100;
+    }
+
     r_joint = (b2RevoluteJoint*) car->world->CreateJoint(&joint_def);
-  }
 }
 
 void Wheel::DriftingControl(){
   b2Vec2 velocity = body->GetLinearVelocityFromLocalPoint(b2Vec2(0.0f,0.0f));
   float32 angle = body->GetAngle();
-  b2Vec2 body_axis = b2Vec2(cos(angle),sin(angle)); 
+  b2Vec2 body_axis = b2Vec2(7*cos(angle),7*sin(angle));
   b2Vec2 orthogonal_velocity = b2Dot(velocity,body_axis) * body_axis; 
   velocity = velocity - orthogonal_velocity;
-  body->SetLinearVelocity(velocity);
+  //body->SetLinearVelocity(velocity);
+  body->ApplyForce(b2Vec2(0.0f,0.0f) - orthogonal_velocity,body->GetPosition());
 }
 
 void Wheel::Driving(){
