@@ -1,20 +1,18 @@
 #include <stdio.h>
 
 #include "Predecls.h"
-#include "CGraphics.h"
+#include "Graphics.h"
 #include "Event.h"
-#include "GPInterface.h"
 
 int main(int argc, char** argv){
- 
-  int window_w = 640;
-  int window_h = 480;
-
-  CGraphics *gr = CGraphics::Create(window_w, window_h);
+  
+  Graphics *gr = Graphics::Create(1024, 768);
   assert(gr);
   //bool Running = true;
   
-  gr->AddCar(100, 100, 60, "./gfx/car1.png");
+  gr->InitGPInterface(1024, 768, 400, 300);
+  gr->AddSprite(0, 0, 0, 32, 17, "./gfx/car1.png");
+  //gr->AddSprite(512, 384, 30.0f, 32, 17, "./gfx/car2.png");
     
   // Define the gravity vector.
   b2Vec2 gravity(0.0f, 0.0f);
@@ -30,18 +28,20 @@ int main(int argc, char** argv){
   int32 posIterations = 2;
 
   Track * track = new Track(&world, "track.txt");
-  Car * car = new Car(&world, 50.0f, 50.0f,track,1000,100, 3.1415 / 6.0);
+  Car * car = new Car(&world, 300.0f, 300.0f,track);
 
   int i;
   Event new_event; // new_event.running_ is 'true' by default
   
-  GPInterface gpi;
-  gpi.Init(window_w, window_h, 400,300);
-
   while(new_event.running()) {
     // Browse all the events (SDL_Events)
     // In case of quit-event, new_event.running_ sets to 'false'
     new_event.CheckEvents();
+    if(new_event.fullscreen()) {
+      gr->FullscreenOn();
+    } else {
+        gr->FullscreenOff();
+      }
     // After calling CheckEvents(), new_event.control_keys_state_ sets to actual
     // value according to pressed keys on keyboard
     
@@ -55,13 +55,13 @@ int main(int argc, char** argv){
     world.Step(timeStep, velIterations, posIterations);
     
     car_coordinates coordinates = car->GetCoordinates();
-    gr->SetCoordinates(1,
-                      gpi.gr_coordinate_x(coordinates.x),
-                      gpi.gr_coordinate_y(coordinates.y),
-                      -coordinates.angle + 3.1415);
+    gr->SetSpriteCoordinates(0,
+                      coordinates.x,
+                      coordinates.y,
+                      coordinates.angle + 3.1415);
     gr->Render();
   }
-
+  gr->CleanUp();
   delete gr;
   
   delete track;

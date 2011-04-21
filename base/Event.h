@@ -41,10 +41,11 @@ class Event {
   struct car_control_keys control_keys_state();
   void set_control_keys_state();
   bool running();
-
+  bool fullscreen();
  private:
   car_control_keys control_keys_state_;
   bool running_;
+  bool fullscreen_;
   SDL_Event event_;
 };
 

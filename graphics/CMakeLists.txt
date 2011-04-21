@@ -14,18 +14,18 @@ set (
   GL
 )
 
-set (HEADERS CGraphics.h GPInterface.h)
+set (HEADERS Graphics.h Sprite.h GPInterface.h loading_functions.h)
 
 set (
-  SOURCES  
+  SOURCES
 
-  CCar.cpp
-  CGraphics.cpp
-  common.cpp
+  Sprite.cpp
+  Graphics.cpp
+  loading_functions.cpp
   GPInterface.cpp
 )
 
-set (TESTS ${SOURCES} GraphTest.cpp)
+set (TESTS ${SOURCES} graphics_test.cpp)
 
 
 if ( NOT SDL_FOUND )

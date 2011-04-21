@@ -17,10 +17,14 @@ bool GPInterface::Init(int gr_w, int gr_h, int ph_w, int ph_h) {
 }
 
 // TODO(horoshenkih): do these functions inline (?)
-int GPInterface::gr_coordinate_x(float phys_coordinate_x){
-  return (int)(phys_coordinate_x*scale_x_);
+int GPInterface::gr_x(float phys_x){
+  return (int)(phys_x*scale_x_);
 }
 
-int GPInterface::gr_coordinate_y(float phys_coordinate_y){
-  return (int)(phys_coordinate_y*scale_y_);
+int GPInterface::gr_y(float phys_y){
+  return (int)(phys_y*scale_y_);
+}
+
+float GPInterface::gr_ang(float phys_ang){
+  return phys_ang*180/3.1415;
 }

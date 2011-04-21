@@ -2,7 +2,8 @@
 
 Event::Event() {
   running_ = true;
-
+  fullscreen_ = false;
+  
   control_keys_state_.up = false;
   control_keys_state_.down = false;
   control_keys_state_.left = false;
@@ -178,6 +179,10 @@ car_control_keys Event::control_keys_state() {
   return control_keys_state_;
 }
 
+bool Event::fullscreen() {
+  return fullscreen_;
+}
+
 bool Event::running() {
   return running_;
 }
@@ -189,23 +194,24 @@ void Event::OnInputBlur() {
 }
 
 void Event::OnKeyDown(SDLKey sym, SDLMod mod, Uint16 unicode) {
-  set_control_keys_state();/*
-        switch(sym) {
-          case SDLK_UP: control_keys_state_.up = true; break;
-          case SDLK_DOWN: control_keys_state_.down = true; break;
-          case SDLK_LEFT: control_keys_state_.left = true; break;
-          case SDLK_RIGHT: control_keys_state_.right = true; break;
-        }*/
+  switch(sym) {
+    case SDLK_UP: control_keys_state_.up = true; break;
+    case SDLK_DOWN: control_keys_state_.down = true; break;
+    case SDLK_LEFT: control_keys_state_.left = true; break;
+    case SDLK_RIGHT: control_keys_state_.right = true; break;
+
+    case SDLK_ESCAPE: OnExit(); break;
+    case SDLK_F11: fullscreen_ = !fullscreen_;
+  }
 }
 
 void Event::OnKeyUp(SDLKey sym, SDLMod mod, Uint16 unicode) {
-   set_control_keys_state();/*
-        switch(sym) {
-          case SDLK_UP: control_keys_state_.up = false; break;
-          case SDLK_DOWN: control_keys_state_.down = false; break;
-          case SDLK_LEFT: control_keys_state_.left = false; break;
-          case SDLK_RIGHT: control_keys_state_.right = false; break;
-        }*/
+  switch(sym) {
+    case SDLK_UP: control_keys_state_.up = false; break;
+    case SDLK_DOWN: control_keys_state_.down = false; break;
+    case SDLK_LEFT: control_keys_state_.left = false; break;
+    case SDLK_RIGHT: control_keys_state_.right = false; break;
+  }
 }
 
 void Event::OnMouseFocus() {

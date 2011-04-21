@@ -11,9 +11,9 @@ class GPInterface {
   bool Init(int gr_w, int gr_h, int ph_w, int ph_h);
   
   // conversion from "physics" to "graphics" coordinates
-  int gr_coordinate_x(float phys_coordinate_x);
-  int gr_coordinate_y(float phys_coordinate_y);
-  
+  int gr_x(float phys_x);
+  int gr_y(float phys_y);
+  float gr_ang(float phys_ang);
  private:
   float scale_x_;
   float scale_y_;
