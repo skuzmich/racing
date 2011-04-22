@@ -37,5 +37,6 @@ struct car_control_keys{
 #include "Car.h"
 #include "EndContacts.h"
 #include "BeginContacts.h"
+#include "ContactListener.h"
 
 #endif  //  PHYSICS_LIB_PREDECLS_H

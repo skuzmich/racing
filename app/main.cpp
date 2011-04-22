@@ -27,9 +27,10 @@ int main(int argc, char** argv){
   int32 posIterations = 3;
 
   Track * track = new Track(&world, "track.txt");
-  Car * car = new Car(&world, 50.0f, 50.0f,track, 1700,20, 3.1415 / 10.0);
+  Car * car = new Car(&world, 50.0f, 50.0f,track, 4700, 200, 3.1415f / 15.0f);
+  Listener *contact_listener = new Listener();
+  world.SetContactListener(contact_listener);
 
-  int i;
   Event new_event; // new_event.running_ is 'true' by default
   
   while(new_event.running()) {
@@ -61,7 +62,7 @@ int main(int argc, char** argv){
     gr->SetSpriteCoordinates(0,
                       coordinates.x,
                       coordinates.y,
-                      coordinates.angle + 3.1415);
+                      coordinates.angle + 3.14);
     gr->Render();
   }
   gr->CleanUp();
