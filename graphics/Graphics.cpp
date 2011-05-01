@@ -70,7 +70,7 @@ Graphics *Graphics::Create(int scr_w, int scr_h) {
   return NULL;
 }
 
-bool Graphics::AddSprite(int X, int Y, float ang, int h, int w, char *img){
+bool Graphics::AddSprite(int X, int Y, float ang, int h, int w, const char *img){
   SDL_Color colorkey = {0xFF, 0x00, 0xFF, 0};
   GLuint tex = LoadGLTexture(img, &colorkey);
 

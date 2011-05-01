@@ -5,5 +5,5 @@
 
 int IsNPOT(int width, int height);
 
-GLuint LoadGLTexture(char *filename, SDL_Color *colorkey);
+GLuint LoadGLTexture(const char *filename, SDL_Color *colorkey);
 #endif

@@ -62,7 +62,7 @@ int GetNextVectorFromFile(std::vector<T> *ret,std::ifstream *myfile, int size){
     return 0;
 }
 
-Track::Track(b2World *m_world, char* track_path){
+Track::Track(b2World *m_world, const char* track_path){
     k_restitution = 0.4f;
     world = m_world;
     b2BodyDef bd;

@@ -11,7 +11,7 @@ int IsNPOT(int width, int height) { // Now it returns 0...
 		return 0;
 }
 
-GLuint LoadGLTexture(char *filename, SDL_Color *colorkey){
+GLuint LoadGLTexture(const char *filename, SDL_Color *colorkey){
 
 	SDL_Surface *temp, *image;
 	GLuint texnum;

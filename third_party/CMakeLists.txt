@@ -16,8 +16,3 @@ set(BOX2D_VERSION 2.1.0)
 
 # The Box2D library.
 add_subdirectory(Box2D)
-  
-# Freeglut libriary.
-find_package(OpenGL REQUIRED)
-add_subdirectory(freeglut)
-add_subdirectory(glui)

@@ -18,7 +18,7 @@ public:
     std::vector<Wall*> walls_list;
     std::vector<SandField*> sandfields_list;
     
-    Track(b2World *m_world, char* track_path );
+    Track(b2World *m_world,const char* track_path );
 };
 
 class Wall{
