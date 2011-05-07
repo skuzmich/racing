@@ -26,36 +26,36 @@ SockExept::~SockExept() {
 }
 
 void SockExept::Print () {
-    std::cerr << "Error in " << this->error_description_ << std::endl
-        << "\tCode: " << this->error_code_ << std::endl
-	<< "\tDesc: " << strerror (this->error_code_) << std::endl;
+    std::cerr << "Error in " << error_description_ << std::endl
+        << "\tCode: " << error_code_ << std::endl
+	<< "\tDesc: " << strerror (error_code_) << std::endl;
 }
 
 SockAddr::SockAddr () {
-    this->address_ = new struct sockaddr_in;
-    this->address_->sin_family = AF_INET;
-    this->address_->sin_addr.s_addr = INADDR_ANY;
+    address_ = new struct sockaddr_in;
+    address_->sin_family = AF_INET;
+    address_->sin_addr.s_addr = INADDR_ANY;
 }
 
 SockAddr::SockAddr (unsigned short port) {
-    this->address_ = new struct sockaddr_in;
-    this->address_->sin_family = AF_INET;
-    this->address_->sin_addr.s_addr = INADDR_ANY;
-    this->address_->sin_port = htons (port);
+    address_ = new struct sockaddr_in;
+    address_->sin_family = AF_INET;
+    address_->sin_addr.s_addr = INADDR_ANY;
+    address_->sin_port = htons (port);
 }
 
 SockAddr::SockAddr (const char * ip, unsigned short port) {
-    this->address_ = new struct sockaddr_in;
-    this->address_->sin_family = AF_INET;
-    inet_aton(ip, &(this->address_->sin_addr));
+    address_ = new struct sockaddr_in;
+    address_->sin_family = AF_INET;
+    inet_aton(ip, &(address_->sin_addr));
 
-    if (this->address_->sin_addr.s_addr == INADDR_NONE)
+    if (address_->sin_addr.s_addr == INADDR_NONE)
         if (strncmp(ip, "255.255.255.255", strlen(ip)) != 0) {
-            throw SockExept ("Socket - invalid address");
-            delete this->address_;
+            throw SockExept ("Socket - invalid address.");
+            delete address_;
         }
 
-    this->address_->sin_port = htons (port);
+    address_->sin_port = htons (port);
 }
 
 SockAddr::~SockAddr(void) {
@@ -67,7 +67,7 @@ bool SockAddr::SetIP (const char * ip) {
     if (ip)
         if (this->address_)
             if (this->address_->sin_addr.s_addr = inet_addr (ip))
-		return true;
+								return true;
     return false;
 }
 
@@ -98,8 +98,8 @@ unsigned short SockAddr::GetPort (void) {
 
 bool Sock_::bind (const SockAddr * addr) {
     if (::bind (this->socket_descriptor_,
-        reinterpret_cast <const struct sockaddr *>((const_cast<SockAddr *>(addr))->GetAddr()),
-        sizeof (struct sockaddr_in)) == 0)
+         reinterpret_cast <const struct sockaddr *>((const_cast<SockAddr *>
+         (addr))->GetAddr()), sizeof (struct sockaddr_in)) == 0)
         return true;
 
     return false;
@@ -107,8 +107,8 @@ bool Sock_::bind (const SockAddr * addr) {
 
 bool UdpSock::bind (const SockAddr * addr) {
     if (::bind (this->socket_descriptor_,
-        reinterpret_cast <const struct sockaddr*>((const_cast<SockAddr *>(addr))->GetAddr()),
-        sizeof (struct sockaddr_in)) == 0)
+         reinterpret_cast <const struct sockaddr*>((const_cast<SockAddr *>
+         (addr))->GetAddr()), sizeof (struct sockaddr_in)) == 0)
         return true;
 
     return false;
@@ -117,34 +117,48 @@ bool UdpSock::bind (const SockAddr * addr) {
 UdpSock::UdpSock () {
     this->socket_descriptor_ = socket(PF_INET, SOCK_DGRAM, 0); 
     if (this->socket_descriptor_ == -1)
-        throw SockExept("Сокет не работает!!1111");
+        throw SockExept("There aren't any avalaible UDP sockets.");
 }
 
 UdpSock::~UdpSock() {
     if (this->socket_descriptor_ > 0)
         ::close(this->socket_descriptor_);
 }
-int UdpSock::send (const SockAddr * dest, const void * data, int len) {
-    return sendto (this->socket_descriptor_, (void *)data, (size_t)len,
-        MSG_DONTWAIT, reinterpret_cast <const sockaddr *> ((const_cast<SockAddr *>(dest))->GetAddr()),
-        sizeof (struct sockaddr_in));
+int UdpSock::send (const SockAddr * dest, const struct Packet * message) {
+		if (message->size < 0)
+    	return -1;
+    return sendto (this->socket_descriptor_, (void *)message,
+    		 sizeof(int) + sizeof(message->type) + message->size, MSG_DONTWAIT,
+         reinterpret_cast <const sockaddr *> ((const_cast<SockAddr *>(dest))->GetAddr()),
+         sizeof (struct sockaddr_in));
 }
 
-int UdpSock::recv (SockAddr * dest, void * data, int len) {
-    assert(data != (char *)NULL);
+int UdpSock::recv (SockAddr * dest, struct Packet * message) {
+
+		if (message == NULL)
+        return -1;
+
     unsigned int dest_len = sizeof (struct sockaddr_in);
-    return recvfrom(this->socket_descriptor_, (void *)data, len, MSG_WAITALL,
-        reinterpret_cast <sockaddr *> (const_cast<sockaddr_in *>(dest->GetAddr())),
-        &dest_len);
+
+    return recvfrom(this->socket_descriptor_, (void *)message,
+    		 sizeof(int) + sizeof(message->type) + message->MAX_PACKET, MSG_WAITALL,
+         reinterpret_cast <sockaddr *> (const_cast<sockaddr_in *>
+         (dest->GetAddr())), &dest_len);
 }
 
 bool UdpSock::connect(SockAddr* srv) {
+
   assert(srv != (SockAddr *)NULL);
+
   if (this->socket_descriptor_ > 0)
+
     if (::connect(this->socket_descriptor_,
-      reinterpret_cast<struct sockaddr *>(const_cast<struct sockaddr_in *>(srv->GetAddr())),
-      sizeof (struct sockaddr_in)) == 0)
+
+      reinterpret_cast<struct sockaddr *>(const_cast<struct sockaddr_in *>
+       (srv->GetAddr())), sizeof (struct sockaddr_in)) == 0)
+
       return true;
+
   return false;
 }
 
@@ -161,7 +175,7 @@ bool UdpSock::EnableBroadcasting() {
     return false;
   int i = 1;
   if (setsockopt(this->socket_descriptor_, SOL_SOCKET, SO_BROADCAST, &i,
-    sizeof(i)) < 0)
+    	sizeof(i)) < 0)
     return false;
   return true;
 }
@@ -171,15 +185,15 @@ bool UdpSock::DisableBroadcasting() {
     return false;
   int i = 0;
   if (setsockopt(this->socket_descriptor_, SOL_SOCKET, SO_BROADCAST, &i,
-    sizeof(i)) < 0)
+   	 sizeof(i)) < 0)
     return false;
   return true;
 }
 
 bool TcpSock::bind (const SockAddr * addr) {
     if (::bind (this->socket_descriptor_,
-        reinterpret_cast <const struct sockaddr*>((const_cast<SockAddr *>(addr))->GetAddr()),
-        sizeof (struct sockaddr_in)) == 0)
+				 reinterpret_cast <const struct sockaddr*>((const_cast<SockAddr *>
+    		 (addr))->GetAddr()), sizeof (struct sockaddr_in)) == 0)
         return true;
 
     return false;
@@ -188,7 +202,7 @@ bool TcpSock::bind (const SockAddr * addr) {
 TcpSock::TcpSock () {
     this->socket_descriptor_ = socket(PF_INET, SOCK_STREAM, 0);
     if (this->socket_descriptor_ == -1)
-        throw SockExept ("Сокет не работает!");
+        throw SockExept ("There aren't any avalaible sockets!");
 }
 
 TcpSock::~TcpSock() {
@@ -196,16 +210,16 @@ TcpSock::~TcpSock() {
         ::close(this->socket_descriptor_);
 }
 
-int TcpSock::send (const SockAddr * dest, const void * data, int len) {
-    return ::send(this->socket_descriptor_, (void *)data, (size_t)len,
-      MSG_DONTWAIT);
+int TcpSock::send (const SockAddr * dest, const struct Packet * message) {
+    return ::send(this->socket_descriptor_, (void *)message,
+    	sizeof(int) + sizeof(message->type) + message->size, MSG_DONTWAIT);
 }
 
-int TcpSock::recv (SockAddr * dest = (SockAddr *)NULL,
-    void * data = (char *)NULL, int len = 0) {
+int TcpSock::recv (SockAddr * dest, struct Packet * message) {
 
-    assert(data != (char *)NULL);
-    return ::recv(this->socket_descriptor_, (void *)data, len, MSG_WAITALL);
+    assert(message != NULL);
+    return ::recv(this->socket_descriptor_, (void *)message,
+    		sizeof(int) + sizeof(message->type) + message->MAX_PACKET, MSG_WAITALL);
 }
 
 
@@ -213,8 +227,8 @@ bool TcpSock::connect(SockAddr* srv) {
     assert(srv != (SockAddr *)NULL);
     if (this->socket_descriptor_ > 0)
         if (::connect(this->socket_descriptor_,
-          reinterpret_cast<struct sockaddr *>(const_cast<struct sockaddr_in *>(srv->GetAddr())),
-          sizeof (struct sockaddr_in)) == 0)
+          	reinterpret_cast<struct sockaddr *>(const_cast<struct sockaddr_in *>
+          	(srv->GetAddr())), sizeof (struct sockaddr_in)) == 0)
           return true;
     return false;
 }

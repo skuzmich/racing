@@ -11,8 +11,7 @@
 #include "ClientData.h"
 
 bool ClientData::GetKeyPressed (std::vector<bool> &keys) {
-	if (keys.size() != 4)
-  	return false;
+	assert(keys.size() == 4);
   short pos = 0;
   for (std::vector<bool>::iterator i = keys.begin();
   		i != keys.end(); i++) {
@@ -23,6 +22,7 @@ bool ClientData::GetKeyPressed (std::vector<bool> &keys) {
 }
 
 bool ClientData::SetKeyPressed (std::vector<bool> &keys) {
+  assert(keys.size() == 4);
 	short pos = 0;
   for (std::vector<bool>::iterator i = keys.begin();
   		i != keys.end();
@@ -49,7 +49,6 @@ bool ClientData::SetPosition (const struct CarPosition * pos) {
   my_position_->angle = pos->angle;
   my_position_->speed = pos->speed;
   my_position_->steer_speed = pos->steer_speed;
-  my_position_->time = pos->time;
 
   return true;
 }
@@ -65,7 +64,7 @@ const struct CarPosition * ClientData::GetPosition () {
   pos->angle = my_position_->angle;
   pos->speed = my_position_->speed;
   pos->steer_speed = my_position_->steer_speed;
-  pos->time = my_position_->time;
+  //pos->time = my_position_->time;
 
   return pos;
 }
@@ -81,7 +80,7 @@ ClientData::ClientData (const SockAddr * m_addr,
   my_position_->angle = init_angle;
   my_position_->speed = 0.;
   my_position_->steer_speed = 0.;
-  my_position_->time = 0.;
+  //my_position_->time = 0.;
 
   my_addr_ = new SockAddr((const_cast<SockAddr *>(m_addr))->GetIP(),
   		(const_cast<SockAddr *>(m_addr))->GetPort());
@@ -105,4 +104,18 @@ ClientData::~ClientData () {
 
   if (my_position_)
     delete my_position_;
+}
+
+bool ClientData::AddDelta (const struct CarPosition * pos) {
+	assert(pos);
+
+	if (!my_position_)
+  	return false;
+
+	my_position_->x += pos->x;
+  my_position_->y += pos->y;
+  my_position_->angle += pos->angle;
+  my_position_->speed += pos->speed;
+  my_position_->steer_speed += pos->steer_speed;
+  return true;
 }

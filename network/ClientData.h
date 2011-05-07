@@ -20,8 +20,17 @@ struct CarPosition {
   float angle;
   float speed;
   float steer_speed;
-  float time;
 };
+ 
+struct Synchro {
+  float x;
+  float y;
+  float angle;
+  float speed;
+  float steer_speed;
+  long long int time;
+};
+
 
 class ClientData {
   private:
@@ -40,6 +49,7 @@ class ClientData {
     bool SetPosition (const struct CarPosition * pos);
     const struct CarPosition * GetPosition ();
 
+		bool AddDelta(const struct CarPosition * pos);
   	const SockAddr * GetAddr ();
 
     // [0] - left,

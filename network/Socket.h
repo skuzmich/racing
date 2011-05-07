@@ -15,6 +15,16 @@
 
 #include <string>
 
+enum PacketType {SYNHRO, DELTA, INIT};
+
+struct Packet {
+  static const size_t MAX_PACKET = 1024;
+
+	PacketType type;
+  size_t size;
+  char data[MAX_PACKET];
+};
+
 class SockExept {
 public:
     SockExept (const char * error_string);
@@ -61,10 +71,9 @@ public:
     // Bind socket to network addres.
     virtual bool bind (const SockAddr * addr);
     // Send the message.
-    virtual int send (const SockAddr * dest, const void * message,
-				int len) {;};
+    virtual int send (const SockAddr * dest, const struct Packet * message) {;};
     // Receive a message.
-    virtual int recv (SockAddr * dest, void * message, int len) {;};
+    virtual int recv (SockAddr * dest, struct Packet * message) {;};
 
     // Connect to remote host.
     virtual bool connect(SockAddr *srv) {;};
@@ -87,10 +96,10 @@ public:
     virtual bool bind (const SockAddr * addr);
 
     // Send the message. dest may be NULL pointer.
-    virtual int send (const SockAddr * dest, const void * message, int len);
+    virtual int send (const SockAddr * dest, const struct Packet * message);
 
     // Receive a message.
-    virtual int recv (SockAddr * dest, void * message, int len);
+    virtual int recv (SockAddr * dest, struct Packet * message);
 
     // Close the descriptor.
     virtual bool close(void);
@@ -127,10 +136,10 @@ public:
     virtual bool bind (const SockAddr * addr);
 
     // Send the message.
-    virtual int send (const SockAddr * dest, const void * message, int len);
+    virtual int send (const SockAddr * dest, const struct Packet * message);
 
     // Receive a message.
-    virtual int recv (SockAddr * dest, void * message, int len);
+    virtual int recv (SockAddr * dest, struct Packet * message);
 
     // Close the descriptor.
     virtual bool close(void);
