@@ -9,26 +9,17 @@ INCLUDE_DIRECTORIES(third_party)
 INCLUDE_DIRECTORIES(graphics)
 INCLUDE_DIRECTORIES(base)
 
+set (RESOURCES_FILES ${CMAKE_CURRENT_SOURCE_DIR}/build/track.txt)
 
-macro(copy_dir srcDir destDir)
-    message(STATUS "Configuring directory ${destDir}")
-    make_directory(${destDir})
+add_custom_command(    	
+	OUTPUT ${RESOURCES_FILES} 
+	
+	COMMAND echo "Copying resources files..."    	
+	COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/resources/*  ${CMAKE_CURRENT_SOURCE_DIR}/build/
+	
+)
 
-    file(GLOB templateFiles RELATIVE ${srcDir} ${srcDir}/*)
-    foreach(templateFile ${templateFiles})
-        set(srcTemplatePath ${srcDir}/${templateFile})
-        if(NOT IS_DIRECTORY ${srcTemplatePath})
-            message(STATUS "Configuring file ${templateFile}")
-            configure_file(
-                    ${srcTemplatePath}
-                    ${destDir}/${templateFile}
-                    @ONLY)
-        endif(NOT IS_DIRECTORY ${srcTemplatePath})
-    endforeach(templateFile)
-endmacro(copy_dir)
-
-copy_dir(${CMAKE_CURRENT_SOURCE_DIR}/resources  ${CMAKE_CURRENT_SOURCE_DIR}/build/ )
-copy_dir(${CMAKE_CURRENT_SOURCE_DIR}/resources/gfx  ${CMAKE_CURRENT_SOURCE_DIR}/build/gfx )
+add_custom_target(track_file ALL DEPENDS ${RESOURCES_FILES}) 
 
 #adding SLD include directories
 add_definitions(`sdl-config --cflags`)

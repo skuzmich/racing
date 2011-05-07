@@ -60,6 +60,8 @@ bool Graphics::Initialize(int scr_w, int scr_h) {
   glLoadIdentity();
   
   SDL_WM_SetCaption("MIPT racing game","MIPT racing game");
+
+  return true;
 }
 
 Graphics *Graphics::Create(int scr_w, int scr_h) {
