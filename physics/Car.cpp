@@ -1,3 +1,7 @@
+// Copyright (C) 2011 Kuzmich Svyatoslav <svatoslav1@gmail.com>
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 #include "Predecls.h"
 
 Car::Car(b2World *m_world,
@@ -168,7 +172,7 @@ void Wheel::Handling(){
 
   b2Vec2 velocity = body->GetLinearVelocityFromLocalPoint(b2Vec2(0.0f,0.0f));
   float32 angle = body->GetAngle();
-  b2Vec2 body_axis = b2Vec2(5*cos(angle),5*sin(angle));
+  b2Vec2 body_axis = b2Vec2(10*cos(angle),10*sin(angle));
   b2Vec2 orthogonal_velocity = b2Dot(velocity,body_axis) * body_axis;
   
   velocity = velocity - orthogonal_velocity;

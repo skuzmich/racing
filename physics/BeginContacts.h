@@ -1,3 +1,7 @@
+// Copyright (C) 2011 Kuzmich Svyatoslav <svatoslav1@gmail.com>
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 #ifndef PHYSICS_LIB_BEGIN_CONTACTS_H
 #define PHYSICS_LIB_BEGIN_CONTACTS_H
 

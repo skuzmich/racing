@@ -1,5 +1,9 @@
+// Copyright (C) 2011 Horoshenkih Sergey
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 #ifndef _EVENT_H_
-  #define _EVENT_H_
+#define _EVENT_H_
   
 #include <SDL.h>
 #include "Predecls.h"

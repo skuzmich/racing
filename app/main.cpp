@@ -1,3 +1,8 @@
+// Copyright (C) 2011 Kuzmich Svyatoslav <svatoslav1@gmail.com>
+// Copyright (C) 2011 Horoshenkih Sergey
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 #include <stdio.h>
 
 #include "Predecls.h"
@@ -27,7 +32,7 @@ int main(int argc, char** argv){
   int32 posIterations = 3;
 
   Track * track = new Track(&world, "track.txt");
-  Car * car = new Car(&world, 50.0f, 50.0f,track, 4700, 200, 3.1415f / 15.0f);
+  Car * car = new Car(&world, 50.0f, 50.0f,track, 4700, 200, 3.1415f / 10.0f);
   Listener *contact_listener = new Listener();
   world.SetContactListener(contact_listener);
 

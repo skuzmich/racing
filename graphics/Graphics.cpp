@@ -1,3 +1,7 @@
+// Copyright (C) 2011 Horoshenkih Sergey
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 #include "Graphics.h"
 #include "loading_functions.h"
 
