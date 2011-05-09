@@ -162,14 +162,6 @@ Wheel::Wheel(Car *wheel_car,
 }
 
 void Wheel::Handling(){
-  breaking = car->breaking;
-
-  if (breaking){
-    body->SetLinearDamping(15.5f);
-  } else {
-    body->SetLinearDamping(5.5f);
-  }
-
   b2Vec2 velocity = body->GetLinearVelocityFromLocalPoint(b2Vec2(0.0f,0.0f));
   float32 angle = body->GetAngle();
   b2Vec2 body_axis = b2Vec2(10*cos(angle),10*sin(angle));

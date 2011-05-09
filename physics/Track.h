@@ -50,6 +50,7 @@ class SandField{
   public:
     ObjData data;
     SandField(b2Vec2 *vertices, int size, Track* input_track){
+        printf("Constructor sandfield begin!");
         track = input_track;
         b2PolygonShape polygon;
         polygon.Set(vertices, size);
@@ -64,6 +65,7 @@ class SandField{
         sd.isSensor = true;
 
         track->sensors_list.push_back(track->sandfield->CreateFixture(&sd));
+        printf("Constructor sandfield done!");
     }
   private:
     Track* track;

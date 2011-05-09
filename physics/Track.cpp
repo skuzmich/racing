@@ -49,7 +49,7 @@ int GetNextVectorFromFile(std::vector<T> *ret,std::ifstream *myfile, int size){
                 if(from_string<T>(f, vec[i], std::dec))
                 {
                     ret->push_back(f-(float)5.5);
-                    std::cout << f << std::endl;
+                //    std::cout << f << std::endl;
                 }
                 else
                 {
@@ -81,10 +81,11 @@ Track::Track(b2World *m_world, const char* track_path){
     
     int count = 3;
     while (! GetNextVectorFromFile<float>(&vec,&myfile, count * 2)){
+      printf("\n\n\n\nSandfield Created!!\n!\n");
         b2Vec2 *vertices = (b2Vec2*) malloc(count * sizeof(b2Vec2));
         for (int i = 0; i < count; i++){
-            vertices[i].Set(vec[2*i],vec[2*i+1]);
             printf("==%f %f\n", vec[2*i], vec[2*i+1]);
+            vertices[i].Set(vec[2*i],vec[2*i+1]);
         }
         sandfields_list.push_back(new SandField(vertices,count,this));
     }

@@ -74,31 +74,31 @@ void ControlBeginContacts(b2Fixture* fixtureA, b2Fixture* fixtureB){
 
 
 void BeginWheelAndWheel(b2Fixture* fixtureA, b2Fixture* fixtureB){
-    printf("Begin Wheel And Wheel\n"); 
+//    printf("Begin Wheel And Wheel\n"); 
 }
 
 void BeginCarBodyAndCarBody(b2Fixture* fixtureA, b2Fixture* fixtureB){
-    printf("Begin CarBody And CarBody\n"); 
+//   printf("Begin CarBody And CarBody\n"); 
 }
 
 void BeginCarBodyAndWheel(b2Fixture* fixtureA, b2Fixture* fixtureB){
-    printf("Begin CarBody And CarBody\n"); 
+//    printf("Begin CarBody And CarBody\n"); 
 }
 
 void BeginCarBodyAndWall(b2Fixture* fixtureA, b2Fixture* fixtureB){
-    printf("Begin CarBody And Wall\n"); 
+//    printf("Begin CarBody And Wall\n"); 
 }
 
 void BeginWheelAndWall(b2Fixture* fixtureA, b2Fixture* fixtureB){
-    printf("Begin Wheel And Wall\n"); 
+//    printf("Begin Wheel And Wall\n"); 
 }
 
 void BeginWheelAndSandField(b2Fixture* fixtureA, b2Fixture* fixtureB){
-    fixtureA->GetBody()->SetLinearDamping(30.0f);
-    fixtureA->GetBody()->SetAngularDamping(30.0f);
-    printf("Begin Wheel And SandField\n"); 
+    fixtureA->GetBody()->SetLinearDamping(25.0f);
+    fixtureA->GetBody()->SetAngularDamping(0.1f);
+//    printf("Begin Wheel And SandField\n"); 
 }
 
 void BeginCarBodyAndSandField(b2Fixture* fixtureA, b2Fixture* fixtureB){
-    printf("Begin CarBody And SandField\n"); 
+//    printf("Begin CarBody And SandField\n"); 
 }

@@ -10,13 +10,13 @@ Listener::Listener(){
 void Listener::BeginContact(b2Contact* contact){
   b2Fixture* fixtureA = contact->GetFixtureA();
   b2Fixture* fixtureB = contact->GetFixtureB();
-  //  ControlBeginContacts(fixtureA, fixtureB);
+  ControlBeginContacts(fixtureA, fixtureB);
 }
 
 void Listener::EndContact(b2Contact* contact) {
   b2Fixture* fixtureA = contact->GetFixtureA();
   b2Fixture* fixtureB = contact->GetFixtureB();
-  //  ControlEndContacts(fixtureA, fixtureB);
+  ControlEndContacts(fixtureA, fixtureB);
 }
 
 void Listener::PostSolve(const b2Contact* contact, const b2ContactImpulse* impulse){
