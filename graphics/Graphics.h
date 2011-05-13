@@ -8,7 +8,6 @@
 #include "Sprite.h"
 #include "GPInterface.h"
 
-
 #include <vector>
 
 #include <SDL.h>
@@ -22,27 +21,25 @@
 class Graphics {
   private:
     SDL_Surface *surf_display_;
-    SDL_Surface *back_surface_;
     GPInterface *gpi_;
-    GLuint back_texture_;
-    std::vector<class Sprite *> list_of_sprites_;
+    std::vector<class SpriteCar *> list_of_cars_;
+    std::vector<class SpriteBack *> list_of_backs_;
     bool fullscreen_;
+
   public:
     static Graphics *Create(int scr_w, int scr_h);
     Graphics();
     ~Graphics();
     bool Initialize(int scr_w, int scr_h);
     bool InitGPInterface(int gr_w, int gr_h, int ph_w, int ph_h);
-    bool AddSprite(int X, int Y, float ang, int h, int w, const char *img);
-    bool SetSpriteCoordinates(int i /*number of sprite in list*/,
+    bool LoadCar(int h, int w, const char *img);
+    bool LoadBack(const char *img);
+    bool SetCarCoordinates(int i /*number of car in list*/,
                               float X, float Y, float ang);
-    void BlitBack();
-    void BlitSprite(int i);
-    void Render();
     bool fullscreen();
+    void SetFullscreen(bool f);
+    void Render();
     bool CleanUp();
-    void FullscreenOn();
-    void FullscreenOff();
 };
 
 #endif

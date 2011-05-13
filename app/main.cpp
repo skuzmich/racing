@@ -14,9 +14,10 @@ int main(int argc, char** argv){
   Graphics *gr = Graphics::Create(800, 600);
   assert(gr);
   //bool Running = true;
-  
+  // Initialization of interface between graphics and physics (GPInterface)
   gr->InitGPInterface(800, 600, 400, 300);
-  gr->AddSprite(0, 0, 0, 25, 14, "./gfx/car2.png");
+  gr->LoadBack("./gfx/Track.png");
+  gr->LoadCar(40, 40, "./gfx/car3.png");
   //gr->AddSprite(512, 384, 30.0f, 32, 17, "./gfx/car2.png");
     
   // Define the gravity vector.
@@ -41,9 +42,9 @@ int main(int argc, char** argv){
     // In case of quit-event, new_event.running_ sets to 'false'
     new_event.CheckEvents();
     if(new_event.fullscreen()) {
-      gr->FullscreenOn();
+      gr->SetFullscreen(true);
     } else {
-        gr->FullscreenOff();
+        gr->SetFullscreen(false);
       }
     // After calling CheckEvents(), new_event.control_keys_state_ sets to actual
     // value according to pressed keys on keyboard
@@ -62,7 +63,7 @@ int main(int argc, char** argv){
     world.Step(timeStep, velIterations, posIterations);
     
     car_coordinates coordinates = car->GetCoordinates();
-    gr->SetSpriteCoordinates(0,
+    gr->SetCarCoordinates(0,
                       coordinates.x,
                       coordinates.y,
                       coordinates.angle + 3.14);

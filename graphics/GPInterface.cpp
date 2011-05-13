@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 #include "GPInterface.h"
+#include <stdio.h>
 
 GPInterface::GPInterface() {
   scale_x_ = 1.0;
@@ -10,6 +11,7 @@ GPInterface::GPInterface() {
 }
 
 GPInterface::~GPInterface() {
+  //printf("In GPInterface::GPInterface()\n");
 }
 
 bool GPInterface::Init(int gr_w, int gr_h, int ph_w, int ph_h) {
@@ -22,11 +24,11 @@ bool GPInterface::Init(int gr_w, int gr_h, int ph_w, int ph_h) {
 
 // TODO(horoshenkih): do these functions inline (?)
 int GPInterface::gr_x(float phys_x){
-  return (int)(phys_x*scale_x_);
+  return (int)(phys_x*scale_x_ + 0.5);
 }
 
 int GPInterface::gr_y(float phys_y){
-  return (int)(phys_y*scale_y_);
+  return (int)(phys_y*scale_y_+ 0.5);
 }
 
 float GPInterface::gr_ang(float phys_ang){
