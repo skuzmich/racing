@@ -6,7 +6,7 @@
   #define _GRAPHICS_H_
 
 #include "Sprite.h"
-#include "GPInterface.h"
+#include "TextureManager.h"
 
 #include <vector>
 
@@ -21,9 +21,9 @@
 class Graphics {
   private:
     SDL_Surface *surf_display_;
-    GPInterface *gpi_;
-    std::vector<class SpriteCar *> list_of_cars_;
-    std::vector<class SpriteBack *> list_of_backs_;
+    TextureManager *tex_manager_;
+    std::vector<class Sprite *> list_of_cars_;
+    std::vector<class Sprite *> list_of_backs_;
     bool fullscreen_;
 
   public:
@@ -31,13 +31,14 @@ class Graphics {
     Graphics();
     ~Graphics();
     bool Initialize(int scr_w, int scr_h);
-    bool InitGPInterface(int gr_w, int gr_h, int ph_w, int ph_h);
-    bool LoadCar(int h, int w, const char *img);
+    bool LoadCar(float h, float w, const char *img);
     bool LoadBack(const char *img);
     bool SetCarCoordinates(int i /*number of car in list*/,
                               float X, float Y, float ang);
     bool fullscreen();
     void SetFullscreen(bool f);
+    void BlitTexture(unsigned int tex_id, float x, float y, float angle,
+                    int anchor, float x_size, float y_size);
     void Render();
     bool CleanUp();
 };

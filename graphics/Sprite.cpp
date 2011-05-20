@@ -16,20 +16,19 @@ Sprite::Sprite() {
 }
 */
 Sprite::~Sprite() {
-  if(glIsTexture(sprite_texture_)) {
-    glDeleteTextures(1, &sprite_texture_);
-  }
 }
 
-Sprite::Sprite(const char *filename, int width, int height,
-        int x_coord, int y_coord, float angle) {
+Sprite::Sprite(unsigned int texture_id, float width, float height, int anchor_point,
+        float x_coord, float y_coord, float angle) {
 
+  texture_id_ = texture_id;
   x_coord_ = x_coord;
   y_coord_ = y_coord;
   angle_ = angle;
   height_ = height;
   width_ = width;
-
+  anchor_point_ = anchor_point;
+  /*
 	SDL_Surface *temp, *image;
 	GLuint texnum;
 	Uint32 key;
@@ -84,33 +83,34 @@ Sprite::Sprite(const char *filename, int width, int height,
                  GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
 
 		SDL_FreeSurface(image);
-		sprite_texture_ = texnum;
+		texture_id_ = texnum;
   }	else {
-      sprite_texture_ = 0;
+      texture_id_ = 0;
       w_img_ = h_img_ = w_tex_ = h_tex_ = 0;
     }
+    */
 }
 
-void Sprite::GetCoordinates(int X, int Y, float ang){
+void Sprite::GetCoordinates(float X, float Y, float ang){
   x_coord_ = X;
   y_coord_ = Y;
   angle_ = ang;
 }
 
 // Some getters below
-int Sprite::width() const {
+float Sprite::width() const {
   return width_;
 }
 
-int Sprite::height() const {
+float Sprite::height() const {
   return height_;
 }
 
-int Sprite::x_coord() const {
+float Sprite::x_coord() const {
   return x_coord_;
 }
 
-int Sprite::y_coord() const {
+float Sprite::y_coord() const {
   return y_coord_;
 }
 
@@ -118,10 +118,10 @@ float Sprite::angle() const {
   return angle_;
 }
 
-GLuint Sprite::sprite_texture() const {
-  return sprite_texture_;
+GLuint Sprite::texture_id() const {
+  return texture_id_;
 }
-
+/*
 int Sprite::w_img() const {
   return w_img_;
 }
@@ -172,7 +172,7 @@ void SpriteCar::Blit() {
     glRotatef((GLfloat)angle_, 0, 0, 1);
     
   // Binding texture
-	glBindTexture(GL_TEXTURE_2D, sprite_texture_);
+	glBindTexture(GL_TEXTURE_2D, texture_id_);
 	glBegin(GL_QUADS);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glTexCoord2d(xpad+1, ypad+1);
@@ -220,7 +220,7 @@ void SpriteBack::Blit() {
     glLoadIdentity();
 
   // Binding texture
-	glBindTexture(GL_TEXTURE_2D, sprite_texture_);
+	glBindTexture(GL_TEXTURE_2D, texture_id_);
 	glBegin(GL_QUADS);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glTexCoord2d(xpad, ypad);
@@ -240,3 +240,4 @@ void SpriteBack::Blit() {
 	glDisable(GL_BLEND);
 
 }
+*/

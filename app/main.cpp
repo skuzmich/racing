@@ -14,8 +14,6 @@ int main(int argc, char** argv){
   Graphics *gr = Graphics::Create(800, 600);
   assert(gr);
   //bool Running = true;
-  // Initialization of interface between graphics and physics (GPInterface)
-  gr->InitGPInterface(800, 600, 400, 300);
   gr->LoadBack("./gfx/Track.png");
   gr->LoadCar(40, 40, "./gfx/car3.png");
   //gr->AddSprite(512, 384, 30.0f, 32, 17, "./gfx/car2.png");
