@@ -124,13 +124,17 @@ UdpSock::~UdpSock() {
     if (this->socket_descriptor_ > 0)
         ::close(this->socket_descriptor_);
 }
+
 int UdpSock::send (const SockAddr * dest, const struct Packet * message) {
 		if (message->size < 0)
     	return -1;
-    return sendto (this->socket_descriptor_, (void *)message,
-    		 sizeof(int) + sizeof(message->type) + message->size, MSG_DONTWAIT,
+    if (sendto (this->socket_descriptor_, (void *)message,
+    		 sizeof(PacketType) + sizeof(size_t) + message->size, MSG_DONTWAIT,
          reinterpret_cast <const sockaddr *> ((const_cast<SockAddr *>(dest))->GetAddr()),
-         sizeof (struct sockaddr_in));
+         sizeof (struct sockaddr_in)) == sizeof(PacketType) +
+         message->size + sizeof(size_t))
+      return message->size;
+    return -1;
 }
 
 int UdpSock::recv (SockAddr * dest, struct Packet * message) {
@@ -140,10 +144,11 @@ int UdpSock::recv (SockAddr * dest, struct Packet * message) {
 
     unsigned int dest_len = sizeof (struct sockaddr_in);
 
-    return recvfrom(this->socket_descriptor_, (void *)message,
-    		 sizeof(int) + sizeof(message->type) + message->MAX_PACKET, MSG_WAITALL,
+    if (recvfrom(this->socket_descriptor_, (void *)message,
+    		 sizeof(int) + sizeof(message->type) + MAX_PACKET, MSG_WAITALL,
          reinterpret_cast <sockaddr *> (const_cast<sockaddr_in *>
-         (dest->GetAddr())), &dest_len);
+         (dest->GetAddr())), &dest_len) > 0)
+        return message->size;
 }
 
 bool UdpSock::connect(SockAddr* srv) {
@@ -219,7 +224,7 @@ int TcpSock::recv (SockAddr * dest, struct Packet * message) {
 
     assert(message != NULL);
     return ::recv(this->socket_descriptor_, (void *)message,
-    		sizeof(int) + sizeof(message->type) + message->MAX_PACKET, MSG_WAITALL);
+    		sizeof(int) + sizeof(message->type) + MAX_PACKET, MSG_WAITALL);
 }
 
 

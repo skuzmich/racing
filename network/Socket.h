@@ -17,9 +17,9 @@
 
 enum PacketType {SYNHRO, DELTA, INIT};
 
-struct Packet {
-  static const size_t MAX_PACKET = 1024;
+static const size_t MAX_PACKET = 1024;
 
+struct Packet {
 	PacketType type;
   size_t size;
   char data[MAX_PACKET];

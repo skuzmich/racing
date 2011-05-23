@@ -10,6 +10,8 @@
 #include <assert.h>
 #include <pthread.h>
 #include <string.h>
+#include <unistd.h>
+#include <stdio.h>
 
 #include "Client.h"
 
@@ -21,26 +23,28 @@ struct DataForSend {
 
 // Эта функция в отдельном потоке посылает 100 запросов на соединение к серверу.
 void * SendReq(void * serv_data) {
-	assert (serv_data != NULL);
+	assert(serv_data != NULL);
 	struct DataForSend * casted_serv_data = reinterpret_cast<struct DataForSend *>(serv_data);
 
 	assert (casted_serv_data->sock != NULL);
   assert (casted_serv_data->serv_addr != NULL);
   assert (casted_serv_data->accepted);
 
-  struct Packet msg_to_serv;
-  strncpy (msg_to_serv.data, "I want to play!", strlen("I want to play!"));
+  struct Packet * msg_to_serv = new struct Packet;
+  strncpy (msg_to_serv->data, "I want to play!", strlen("I want to play!"));
+  msg_to_serv->size = strlen("I want to play!");
 
   int i = 0;
 	for (; i < 100; i++) {
   	if (*(casted_serv_data->accepted) == 0)
-  	  casted_serv_data->sock->send(casted_serv_data->serv_addr, &msg_to_serv);
+  	  casted_serv_data->sock->send(casted_serv_data->serv_addr, msg_to_serv);
   }
 
   // данное условие означает, что было выполненно 100 запросов, но подтверждения
   // от сервера не последовало.
   if (i == 100 && *(casted_serv_data->accepted) == 0)
     *(casted_serv_data->accepted) == -1;
+  delete msg_to_serv;
 }
 
 Client::Client (const char * ip, short port, int timeout_sec,
@@ -85,8 +89,8 @@ Client::Client (const char * ip, short port, int timeout_sec,
 
 		if (strcmp(receiving_for->GetIP(), ip) && (port == receiving_for->GetPort()))
 
-    	if (strncmp(msg_from_srv.data, "You're accepted",
-                  strlen("You're accepted")) == 0) {
+    	if (strncmp(msg_from_srv.data, "You're accepted!",
+                  strlen("You're accepted!")) == 0) {
       	(*accepted) = 1;
         break;
       }
@@ -97,7 +101,11 @@ Client::Client (const char * ip, short port, int timeout_sec,
     	printf("Client: unknown data received!\n");
     FD_ZERO(&recvfds);
     FD_SET(my_sock_->GetDescriptor(), &recvfds);
+    timeout.tv_sec = timeout_sec;
+    timeout.tv_usec = timeout_usec;
   }
+
+  my_data_ = new ClientData();
 }
 
 bool Client::Send() {
@@ -114,9 +122,20 @@ bool Client::Send() {
 bool Client::Recv() {
 	struct Packet * pos = new struct Packet;
 	if (my_sock_->recv(serv_addr_, pos) == sizeof(struct CarPosition)) {
-
-    my_data_->SetPosition(reinterpret_cast<struct CarPosition *> (pos));
-    return true;
+    if (pos->type == DELTA) {
+      my_data_->AddDelta(reinterpret_cast<struct CarPosition *> (pos));
+      return true;
+    } else
+      if (pos->type == SYNHRO) {
+        my_data_->SetPosition(reinterpret_cast<struct CarPosition *>(pos));
+        struct Packet * syn_answer = new struct Packet;
+        syn_answer->type = SYNHRO;
+        syn_answer->size = strlen("I'm online!");
+        strncpy(syn_answer->data, "I'm online!", strlen("I'm online!"));
+        my_sock_->send(serv_addr_, syn_answer);
+        delete syn_answer;
+        return true;
+      }
 	}
 	return false;
 }
