@@ -40,7 +40,7 @@ public:
 
 		// После создания сервер ждет каждого нового клиента с указанным таймаутом.
     // После создания вызвать Synhronize().
-		Server (const char * ip, short port, int timeout_sec,
+		Server (short port, int timeout_sec,
             int timeout_microsec, int timeout_total);
 
 		bool SetTimeout (int timeout_sec,
@@ -50,7 +50,9 @@ public:
  
   virtual ~Server () {};
 
-	protected:
+  void test();
+
+  protected:
   	// true возвращается в случае успеха, false - адрес не найден, либо
     // состояние клиента не детерминированно.
   	bool Disconnect(SockAddr * client);
@@ -69,14 +71,16 @@ public:
 
 		// информация о клиентах.
 		static std::map<SockAddr *, ClientData *, ClientCmp> clients_;
-
+	  static std::map<SockAddr *, TcpSock *, ClientCmp> synchro_sockets_;
 
 	private:
 		static struct timeval timeout_;
   	static void * Synhro (void * client);
 
 		// сокет.
-    static UdpSock * my_sock_;
+    static UdpSock * srv_udp_;
+    static UdpSock * synchro_;
+	  static TcpSock * srv_tcp_;
 
   	SockAddr * my_addr_;
   	Server (Server &orig);
