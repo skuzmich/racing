@@ -1,32 +1,33 @@
 // Copyright (C) 2011 Kuzmich Svyatoslav <svatoslav1@gmail.com>
-// Use of this source code is governed by a BSD-style license that can be
+// Use of this source code is governed by a Bcar_fixture_def-style license that can be
 // found in the LICENSE file.
 
 #include "predecls.h"
 
-Car::Car(b2World *m_world,
-         float32 x,
-         float32 y,
-         Track *m_track,
-         float32 new_horsepowers,
-         float32 new_steer_speed,
-         float32 new_max_steer_angle){
+Car::Car(b2World *world,
+    float32 x,
+    float32 y,
+    Track *track,
+    float32 horsepowers,
+    float32 steer_speed,
+    float32 max_steer_angle)
 
-  // Initializing start values
-  steer_speed = new_steer_speed;
-  horsepowers = new_horsepowers;
-  steering_angle = 0;
-  engine_speed = 0;
-  max_steer_angle = new_max_steer_angle;
-  world = m_world; 
-  track = m_track;
-  position = b2Vec2(x,y);
+  :_steer_speed (steer_speed)
+  ,_horsepowers (horsepowers)
+  ,_steering_angle (0)
+  ,_engine_speed  (0)
+  ,_max_steer_angle (max_steer_angle)
+  ,_world (world) 
+  ,_track (track)
+  ,_position (b2Vec2(x,y))
+{
 
   // Creating body
   b2BodyDef car_body_def;
   car_body_def.position.Set(x,y);
 
   // Creating body shape
+  // TODO: make configurable
   b2Vec2 vertices[8];
   vertices[0] = b2Vec2(-3.429f, -5.4864f);
   vertices[1] = b2Vec2(-2.7432f, -6.4008f);
@@ -40,49 +41,49 @@ Car::Car(b2World *m_world,
   b2PolygonShape car_poly_shape;
   car_poly_shape.Set(vertices, 8);
 
-  b2FixtureDef sd;
-  sd.shape = &car_poly_shape;
-  sd.density = 2.0f;
+  b2FixtureDef car_fixture_def;
+  car_fixture_def.shape = &car_poly_shape;
+  car_fixture_def.density = 2.0f;
 
-  data.type = IS_CAR_BODY;
-  data.level=15;
-  sd.userData = (void*) &data;
+  _data.type = IS_CAR_BODY;
+  _data.level=15;
+  car_fixture_def.userData = (void*) &_data;
 
   car_body_def.type = b2_dynamicBody;
   
-  body = world->CreateBody(&car_body_def);
-  body->CreateFixture(&sd);
+  _body = world->CreateBody(&car_body_def);
+  _body->CreateFixture(&car_fixture_def);
 
   // Creating wheels
-  left_wheel = new Wheel(this,x - 3.2f, y - 4.343f, false,track);
-  right_wheel = new Wheel(this,x + 3.2f, y - 4.343f, false,track);
-  left_rear_wheel = new Wheel(this,x - 3.2f, y + 4.343f, true,track);
-  right_rear_wheel = new Wheel(this,x + 3.2f, y + 4.343f, true,track);
+  _left_wheel       = new Wheel(this,x - 3.2f, y - 4.343f, false, _track);
+  _right_wheel      = new Wheel(this,x + 3.2f, y - 4.343f, false, _track);
+  _left_rear_wheel  = new Wheel(this,x - 3.2f, y + 4.343f, true, _track);
+  _right_rear_wheel = new Wheel(this,x + 3.2f, y + 4.343f, true, _track);
 }
 
-Car::~Car(){
-  delete left_wheel;
-  delete right_wheel;
-  delete left_rear_wheel;
-  delete right_rear_wheel;
+Car::~Car() {
+  delete _left_wheel;
+  delete _right_wheel;
+  delete _left_rear_wheel;
+  delete _right_rear_wheel;
 }
 
-void Car::Loop(){
-  left_wheel->Handling();
-  right_wheel->Handling();
-  left_rear_wheel->Handling();
-  right_rear_wheel->Handling();
+void Car::Loop() {
+  _left_wheel->Handling();
+  _right_wheel->Handling();
+  _left_rear_wheel->Handling();
+  _right_rear_wheel->Handling();
   
-  left_wheel->Driving();
-  right_wheel->Driving();
+  _left_wheel->Driving();
+  _right_wheel->Driving();
 
 }
 
 
-car_coordinates Car::GetCoordinates(){
+car_coordinates Car::GetCoordinates() {
   car_coordinates coordinates;
-  b2Vec2 b2coordinates = body->GetPosition();
-  float32 b2angle = body->GetAngle();
+  b2Vec2 b2coordinates = _body->GetPosition();
+  float32 b2angle = _body->GetAngle();
   
   coordinates.x = (float) b2coordinates(0);
   coordinates.y = (float) b2coordinates(1);
@@ -91,91 +92,98 @@ car_coordinates Car::GetCoordinates(){
   return coordinates;
 }
 
-void Car::SetKeys(car_control_keys keys){
+void Car::SetKeys(car_control_keys keys) {
   if (keys.left)
-    steering_angle = -max_steer_angle;
+    _steering_angle = -_max_steer_angle;
   
   if (keys.right)
-    steering_angle = +max_steer_angle;
+    _steering_angle = +_max_steer_angle;
    
   if (! (keys.right || keys.left))
-   steering_angle = 0;
+   _steering_angle = 0;
 
   if (keys.up) 
-    engine_speed = +horsepowers;
+    _engine_speed = _horsepowers;
   
-  if (keys.down){
-    breaking = 1;
-    engine_speed = -horsepowers;
+  if (keys.down) {
+    _breaking = 1;
+    _engine_speed = -_horsepowers;
   } else {
-    breaking = 0;
+    _breaking = 0;
   }
   
   if (! (keys.down || keys.up))
-    engine_speed = 0;
+    _engine_speed = 0;
 
 }
 
-Wheel::Wheel(Car *wheel_car,
+Wheel::Wheel(Car *car,
     float32 x,
     float32 y, 
     bool is_rear
-    ,Track *m_track){
-  rear = is_rear;
-  track = m_track;
-  car = wheel_car;
+    ,Track *track){
+  _is_rear = is_rear;
+  _track = track;
+  _car = car;
+  
+  // Side of the wheel
+  // TODO: make it configurable
   float32 size_x = 0.4572f;
   float32 size_y = 1.143f;
-  b2BodyDef bd;
-  bd.position.Set(x,y);
-  bd.type = b2_dynamicBody;
-  bd.angularDamping = 2.0f;
-  bd.linearDamping = 5.5f;
+  
+  b2BodyDef body_def;
+  body_def.position.Set(x,y);
+  body_def.type = b2_dynamicBody;
 
-  bd.allowSleep = false;
-  body = car->world->CreateBody(&bd);
+  // TODO: make configurable
+  body_def.angularDamping = 2.0f;
+  body_def.linearDamping = 5.5f;
+  body_def.allowSleep = false;
+  _body = _car->_world->CreateBody(&body_def);
+
   b2PolygonShape shape;
   shape.SetAsBox(size_x, size_y);
-  b2FixtureDef fd;
-  fd.shape = &shape;
-  fd.density = 1.0f;
-  fd.friction = 0.0f;
-  data.level = 2;
-  data.type = IS_WHEEL;
+  b2FixtureDef fixture_def;
+  fixture_def.shape = &shape;
+  fixture_def.density = 1.0f;
+  fixture_def.friction = 0.0f;
 
-  fd.userData = (void*) &data;
-  body->CreateFixture(&fd);
+  _data.level = 2;
+  _data.type = IS_WHEEL;
+  fixture_def.userData = (void*) &_data;
+  
+  _body->CreateFixture(&fixture_def);
 
     b2RevoluteJointDef joint_def;
-    joint_def.Initialize(car->body,body,body->GetWorldCenter());
+    joint_def.Initialize(_car->_body, _body, _body->GetWorldCenter());
    
-    if (is_rear){
-    joint_def.enableLimit = true;
-    joint_def.upperAngle = joint_def.lowerAngle = 0;
-    
+    if (is_rear) {
+      joint_def.enableLimit = true;
+      joint_def.upperAngle = joint_def.lowerAngle = 0;
     } else {
-    joint_def.enableMotor = true;
-    joint_def.maxMotorTorque = 100;
+      joint_def.enableMotor = true;
+      joint_def.maxMotorTorque = 100;
     }
 
-    r_joint = (b2RevoluteJoint*) car->world->CreateJoint(&joint_def);
+    _r_joint = (b2RevoluteJoint*) _car->_world->CreateJoint(&joint_def);
 }
 
-void Wheel::Handling(){
-  b2Vec2 velocity = body->GetLinearVelocityFromLocalPoint(b2Vec2(0.0f,0.0f));
-  float32 angle = body->GetAngle();
+void Wheel::Handling() {
+  b2Vec2 velocity = _body->GetLinearVelocityFromLocalPoint(b2Vec2(0.0f,0.0f));
+  float32 angle = _body->GetAngle();
   b2Vec2 body_axis = b2Vec2(10*cos(angle),10*sin(angle));
   b2Vec2 orthogonal_velocity = b2Dot(velocity,body_axis) * body_axis;
-  
+
   velocity = velocity - orthogonal_velocity;
-  body->ApplyForce(b2Vec2(0.0f,0.0f) - orthogonal_velocity,body->GetPosition());
+  _body->ApplyForce(b2Vec2(0.0f,0.0f) - orthogonal_velocity, _body->GetPosition());
 }
 
 void Wheel::Driving(){
-  float32 angle = body->GetAngle();
-  b2Vec2 body_axis = car->engine_speed * b2Vec2(sin(angle),-cos(angle));
-  body->ApplyForce(body_axis,body->GetPosition());
-  float32 mspeed = car->steering_angle - r_joint->GetJointAngle();
-  r_joint->SetMotorSpeed(mspeed * car->steer_speed);
+  float32 angle = _body->GetAngle();
+  b2Vec2 body_axis = _car->_engine_speed * b2Vec2(sin(angle), -cos(angle));
+  _body->ApplyForce(body_axis, _body->GetPosition());
+ 
+  float32 mspeed = _car->_steering_angle - _r_joint->GetJointAngle();
+  _r_joint->SetMotorSpeed(mspeed * _car->_steer_speed);
 } 
 

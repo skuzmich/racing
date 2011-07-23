@@ -12,34 +12,34 @@ struct car_control_keys;
 
 class Car{
   private:
-    Wheel *left_wheel;
-    Wheel *right_wheel;
-    Wheel *left_rear_wheel;
-    Wheel *right_rear_wheel;
+    Wheel * _left_wheel;
+    Wheel * _right_wheel;
+    Wheel * _left_rear_wheel;
+    Wheel * _right_rear_wheel;
     
-    b2Body *body;
-    b2Vec2 position;
-    b2World *world;
-    Track *track;
-    ObjData data;
+    b2Body * _body;
+    b2Vec2 _position;
+    b2World *_world;
+    Track *_track;
+    ObjData _data;
 
-    bool breaking;
+    bool _breaking;
    
-    float32 steering_angle;
-    float32 engine_speed;
-    float32 horsepowers;
-    float32 steer_speed;
-    float32 max_steer_angle;
+    float32 _steering_angle;
+    float32 _engine_speed;
+    float32 _horsepowers;
+    float32 _steer_speed;
+    float32 _max_steer_angle;
 
   public:
     
-    Car(b2World *m_world,
+    Car(b2World *world,
         float32 x,
         float32 y,
-        Track *m_track,
-        float32 new_horsepowers = 1400,
-        float32 new_steer_speed = 10,
-        float32 new_max_steer_angle = 3.1415 / 5.);
+        Track *track,
+        float32 horsepowers = 1400,
+        float32 steer_speed = 10,
+        float32 max_steer_angle = 3.1415 / 5.);
 
     ~Car();
     void Loop();
@@ -48,23 +48,23 @@ class Car{
     friend class Wheel;
 };
 
-class Wheel{
+class Wheel {
+
   private:
-    Car* car;
-    b2Body *body;
-    b2PrismaticJoint* p_joint;
-    b2RevoluteJoint* r_joint;
-    Track *track;
-    bool breaking;
-    ObjData data;
-    bool rear;
-    
+    Car* _car;
+    b2Body *_body;
+    b2RevoluteJoint* _r_joint;
+    Track *_track;
+    bool _breaking;
+    bool _is_rear;
+    ObjData _data;
+
   public:   
     Wheel(Car *wheel_car,
         float32 x,
         float32 y, 
         bool is_rear,
-        Track *m_track);
+        Track *track);
     
     void Handling();
     void Driving();
