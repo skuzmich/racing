@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 #include "CGraphics.h"
-#include "Event.h"
+#include "event.h"
 #include "GPInterface.h"
 
 void SetCoords(int *X, int *Y, float *a){

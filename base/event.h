@@ -6,7 +6,7 @@
 #define _EVENT_H_
   
 #include <SDL.h>
-#include "Predecls.h"
+#include "predecls.h"
 
 class Event {
  public:

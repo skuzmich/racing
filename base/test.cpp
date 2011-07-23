@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "Predecls.h"
-#include "Event.h"
+#include "predecls.h"
+#include "event.h"
 #include "Graphics.h"
 
 int main() {

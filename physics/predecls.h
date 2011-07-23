@@ -37,10 +37,7 @@ struct car_control_keys{
 #include <vector>
 #include <sstream>
 #include "Box2D/Box2D.h"
-#include "Track.h"
-#include "Car.h"
-#include "EndContacts.h"
-#include "BeginContacts.h"
-#include "ContactListener.h"
+#include "track.h"
+#include "car.h"
 
 #endif  //  PHYSICS_LIB_PREDECLS_H

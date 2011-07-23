@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 #include "Graphics.h"
-#include "Event.h"
+#include "event.h"
 
 void SetCoords(int *X, int *Y, float *a){
   static int Xcoord = 100, Ycoord = 100;

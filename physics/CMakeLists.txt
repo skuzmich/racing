@@ -3,18 +3,12 @@
 INCLUDE_DIRECTORIES(../../third_party)
 
 set (HEADERS 
-Car.h 
-Predecls.h 
-Track.h 
-ContactListener.h 
-BeginContacts.h 
-EndContacts.h)
+car.h 
+predecls.h 
+track.h )
 
 set (SOURCES 
-Car.cpp 
-Track.cpp 
-BeginContacts.cpp 
-EndContacts.cpp
-ContactListener.cpp)
+car.cpp 
+track.cpp)
 
 add_library (physics_lib ${HEADERS} ${SOURCES})
