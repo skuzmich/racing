@@ -14,14 +14,15 @@ set (
   GL
 )
 
-set (HEADERS Graphics.h Sprite.h TextureManager.h)
+set (HEADERS Graphics.h Sprite.h GPInterface.h loading_functions.h)
 
 set (
   SOURCES
 
   Sprite.cpp
   Graphics.cpp
-  TextureManager.cpp
+  loading_functions.cpp
+  GPInterface.cpp
 )
 
 set (TESTS ${SOURCES} graphics_test.cpp)

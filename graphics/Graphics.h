@@ -6,7 +6,8 @@
   #define _GRAPHICS_H_
 
 #include "Sprite.h"
-#include "TextureManager.h"
+#include "GPInterface.h"
+
 
 #include <vector>
 
@@ -21,26 +22,27 @@
 class Graphics {
   private:
     SDL_Surface *surf_display_;
-    TextureManager *tex_manager_;
-    std::vector<class Sprite *> list_of_cars_;
-    std::vector<class Sprite *> list_of_backs_;
+    SDL_Surface *back_surface_;
+    GPInterface *gpi_;
+    GLuint back_texture_;
+    std::vector<class Sprite *> list_of_sprites_;
     bool fullscreen_;
-
   public:
     static Graphics *Create(int scr_w, int scr_h);
     Graphics();
     ~Graphics();
     bool Initialize(int scr_w, int scr_h);
-    bool LoadCar(float h, float w, const char *img);
-    bool LoadBack(const char *img);
-    bool SetCarCoordinates(int i /*number of car in list*/,
+    bool InitGPInterface(int gr_w, int gr_h, int ph_w, int ph_h);
+    bool AddSprite(int X, int Y, float ang, int h, int w, const char *img);
+    bool SetSpriteCoordinates(int i /*number of sprite in list*/,
                               float X, float Y, float ang);
-    bool fullscreen();
-    void SetFullscreen(bool f);
-    void BlitTexture(unsigned int tex_id, float x, float y, float angle,
-                    int anchor, float x_size, float y_size);
+    void BlitBack();
+    void BlitSprite(int i);
     void Render();
+    bool fullscreen();
     bool CleanUp();
+    void FullscreenOn();
+    void FullscreenOff();
 };
 
 #endif

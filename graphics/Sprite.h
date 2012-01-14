@@ -13,36 +13,29 @@
 #include <math.h>
 #include <assert.h>
 
-class Sprite { // Class for sprites
+class Sprite {
  public:
-  Sprite(unsigned int texture_id, float width, float height, int anchor_point,
-        float x_coord = 0, float y_coord = 0, float angle = 0.0);
-        // width, height - sizes of image on the screen (now in pixels)
-        // x_coord, y_coord, angle - coordinates
+  Sprite();
+  Sprite(int x_coord, int y_coord, float angle,
+         int height, int width, GLuint texture);
   ~Sprite();
-  
-  void GetCoordinates(float X, float Y, float ang); // Using this method
-                                                // sprite gets coordinates
-
-  // Some getters below
-  float x_coord() const;
-  float y_coord() const;
-  float angle() const;
-  unsigned int texture_id() const;
-  float width() const;
-  float height() const;
-  int anchor_point();
-  
+  void GetCoordinates(int X, int Y, float ang);
+  int height();
+  int width();
+  int x_coord();
+  int y_coord();
+  float angle();
+  GLuint sprite_texture();
  private:
-  float x_coord_;
-  float y_coord_;
+  int x_coord_;
+  int y_coord_;
   float angle_;
-  int anchor_point_; // "ZERO" (0) or "CENTER"(1)
-
-  unsigned int texture_id_; // TextureID of sprite in the Texture manager
   
-  float width_; // width of sprite on the screen
-  float height_; // height of sprite on the screen
+  SDL_Surface *surf_sprite_;
+  GLuint sprite_texture_;
+  int height_;
+  int width_;
+
 };
 
 #endif
