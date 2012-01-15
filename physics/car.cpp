@@ -38,6 +38,15 @@ Car::Car(b2World *world,
   vertices[6] = b2Vec2(3.429f, 5.9436f);
   vertices[7] = b2Vec2(-3.429f, 5.9436f);
    
+  vertices[0] = b2Vec2(-3.429f, -5.4864f);
+  vertices[1] = b2Vec2(-2.7432f, -6.4008f);
+  vertices[2] = b2Vec2(-1.6002f, -6.9723f);
+  vertices[3] = b2Vec2(1.6002f, -6.9723f);
+  vertices[4] = b2Vec2(2.7432f, -6.4008f);
+  vertices[5] = b2Vec2(3.429f, -5.4864f);
+  vertices[6] = b2Vec2(3.429f, 5.9436f);
+  vertices[7] = b2Vec2(-3.429f, 5.9436f);
+
   b2PolygonShape car_poly_shape;
   car_poly_shape.Set(vertices, 8);
 

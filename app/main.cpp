@@ -63,7 +63,7 @@ int main(int argc, char** argv){
     
     car_coordinates coordinates = car->GetCoordinates();
     gr->SetSpriteCoordinates(0,
-                      coordinates.x,
+                      coordinates.x+2,
                       coordinates.y,
                       coordinates.angle + 3.14);
     gr->Render();
