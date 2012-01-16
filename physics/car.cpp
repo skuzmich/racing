@@ -38,15 +38,6 @@ Car::Car(b2World *world,
   vertices[6] = b2Vec2(3.429f, 5.9436f);
   vertices[7] = b2Vec2(-3.429f, 5.9436f);
    
-  vertices[0] = b2Vec2(-3.429f, -5.4864f);
-  vertices[1] = b2Vec2(-2.7432f, -6.4008f);
-  vertices[2] = b2Vec2(-1.6002f, -6.9723f);
-  vertices[3] = b2Vec2(1.6002f, -6.9723f);
-  vertices[4] = b2Vec2(2.7432f, -6.4008f);
-  vertices[5] = b2Vec2(3.429f, -5.4864f);
-  vertices[6] = b2Vec2(3.429f, 5.9436f);
-  vertices[7] = b2Vec2(-3.429f, 5.9436f);
-
   b2PolygonShape car_poly_shape;
   car_poly_shape.Set(vertices, 8);
 
@@ -55,7 +46,7 @@ Car::Car(b2World *world,
   car_fixture_def.density = 2.0f;
 
   _data.type = IS_CAR_BODY;
-  _data.level=15;
+  _data.level = 15;
   car_fixture_def.userData = (void*) &_data;
 
   car_body_def.type = b2_dynamicBody;
@@ -64,10 +55,10 @@ Car::Car(b2World *world,
   _body->CreateFixture(&car_fixture_def);
 
   // Creating wheels
-  _left_wheel       = new Wheel(this,x - 3.2f, y - 4.343f, false, _track);
-  _right_wheel      = new Wheel(this,x + 3.2f, y - 4.343f, false, _track);
-  _left_rear_wheel  = new Wheel(this,x - 3.2f, y + 4.343f, true, _track);
-  _right_rear_wheel = new Wheel(this,x + 3.2f, y + 4.343f, true, _track);
+  _left_wheel       = new Wheel(this, x - 3.2f, y - 4.343f, false, _track);
+  _right_wheel      = new Wheel(this, x + 3.2f, y - 4.343f, false, _track);
+  _left_rear_wheel  = new Wheel(this, x - 3.2f, y + 4.343f, true, _track);
+  _right_rear_wheel = new Wheel(this, x + 3.2f, y + 4.343f, true, _track);
 }
 
 Car::~Car() {
@@ -78,11 +69,12 @@ Car::~Car() {
 }
 
 void Car::Loop() {
+
   _left_wheel->Handling();
   _right_wheel->Handling();
   _left_rear_wheel->Handling();
   _right_rear_wheel->Handling();
-  
+ printf("\n"); 
   _left_wheel->Driving();
   _right_wheel->Driving();
 
@@ -102,12 +94,20 @@ car_coordinates Car::GetCoordinates() {
 }
 
 void Car::SetKeys(car_control_keys keys) {
-  if (keys.left)
-    _steering_angle = -_max_steer_angle;
-  
-  if (keys.right)
-    _steering_angle = +_max_steer_angle;
-   
+  if (keys.left) {
+    float32 velocity = _body->GetLinearVelocity().Length();
+    float32 steer_angle = (-1 * ( atan( velocity/18. - 2.))/4.14 + 1./2.)*3.14/5.;
+//    printf("Velocity = %6.3f, Steer Angle = %5.3f\n", velocity, steer_angle/3.14);
+    _steering_angle = -steer_angle;
+  }
+ 
+  if (keys.right) {
+    float32 velocity = _body->GetLinearVelocity().Length();
+    float32 steer_angle = (-1 * ( atan( velocity/18. - 2.))/4.14 + 1./2. )*3.14/5.;
+////    printf("Velocity = %6.3f, Steer Angle = %5.3f\n", velocity, steer_angle/3.14);
+    _steering_angle = +steer_angle;
+  }
+ 
   if (! (keys.right || keys.left))
    _steering_angle = 0;
 
@@ -145,8 +145,8 @@ Wheel::Wheel(Car *car,
   body_def.type = b2_dynamicBody;
 
   // TODO: make configurable
-  body_def.angularDamping = 2.0f;
-  body_def.linearDamping = 5.5f;
+  body_def.angularDamping = 1.0f;
+  body_def.linearDamping = 2.5f;
   body_def.allowSleep = false;
   _body = _car->_world->CreateBody(&body_def);
 
@@ -178,13 +178,26 @@ Wheel::Wheel(Car *car,
 }
 
 void Wheel::Handling() {
-  b2Vec2 velocity = _body->GetLinearVelocityFromLocalPoint(b2Vec2(0.0f,0.0f));
-  float32 angle = _body->GetAngle();
-  b2Vec2 body_axis = b2Vec2(10*cos(angle),10*sin(angle));
-  b2Vec2 orthogonal_velocity = b2Dot(velocity,body_axis) * body_axis;
 
-  velocity = velocity - orthogonal_velocity;
-  _body->ApplyForce(b2Vec2(0.0f,0.0f) - orthogonal_velocity, _body->GetPosition());
+  float32 friction_k = 100.;
+
+  float32 angle = _body->GetAngle();
+  b2Vec2 velocity = _body->GetLinearVelocityFromLocalPoint(b2Vec2(0.0f,0.0f));
+  b2Vec2 body_axis = b2Vec2(cos(angle),sin(angle));
+  b2Vec2 orthogonal_velocity = b2Dot(velocity,body_axis) * body_axis;
+  b2Vec2 parallel_velocity = ( velocity - orthogonal_velocity );
+  
+  float32 kin = velocity.LengthSquared();
+  b2Vec2 fric_force = friction_k * orthogonal_velocity;
+  b2Vec2 turn_force = ( (fric_force.Length() * orthogonal_velocity.Length() - kin) / parallel_velocity.LengthSquared() ) * parallel_velocity;
+
+  // nan case 
+  if ( turn_force.x != turn_force.x ) turn_force.x = 0;
+  if ( turn_force.y != turn_force.y ) turn_force.y = 0;
+
+  printf("(%5.3f, %5.3f)", turn_force.x, turn_force.y); 
+
+  _body->ApplyForce( -fric_force , _body->GetPosition());
 }
 
 void Wheel::Driving(){
