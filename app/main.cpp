@@ -1,8 +1,10 @@
-// Copyright (C) 2011 Kuzmich Svyatoslav <svatoslav1@gmail.com>
+// Copyright (C) 2011-2012 Kuzmich Svyatoslav <svatoslav1@gmail.com>
 // Copyright (C) 2011 Horoshenkih Sergey
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
+// TODO: Use stl insted of stdio.h
 #include <stdio.h>
 
 #include "predecls.h"

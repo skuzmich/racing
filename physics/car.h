@@ -10,7 +10,7 @@ class Track;
 struct car_coordinates;
 struct car_control_keys;
 
-class Car{
+class Car {
   private:
     Wheel * _left_wheel;
     Wheel * _right_wheel;
@@ -46,7 +46,7 @@ class Car{
     b2Vec2 _l_rear_wheel_point;
     b2Vec2 _r_rear_wheel_point;
     std::string _wheel_config_file;
-    void LoadFile(const char* filename);
+    void LoadFile(std::string filename);
 
   public:
     
@@ -54,7 +54,7 @@ class Car{
         float32 x,
         float32 y,
         Track *track,
-        const char * filename);
+        std::string filename);
 
     ~Car();
     void Loop();

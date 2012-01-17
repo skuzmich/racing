@@ -9,7 +9,7 @@ Car::Car(b2World *world,
     float32 x,
     float32 y,
     Track *track,
-    const char * filename)
+    std::string filename)
 
   :_world (world) 
   ,_track (track)
@@ -74,32 +74,32 @@ Car::~Car() {
   delete _right_rear_wheel;
 }
 
-void Car::LoadFile(const char * filename) {
-  std::ifstream myfile(filename);
+void Car::LoadFile(std::string filename) {
+  std::ifstream myfile(filename.c_str());
 
-  _horsepowers = GetFloatFromFile (&myfile); 
-  _steer_speed = GetFloatFromFile (&myfile); 
-  _density  =    GetFloatFromFile (&myfile); 
-  _friction =    GetFloatFromFile (&myfile); 
+  _horsepowers = ReadFloat (&myfile); 
+  _steer_speed = ReadFloat (&myfile); 
+  _density  =    ReadFloat (&myfile); 
+  _friction =    ReadFloat (&myfile); 
 
-  _steer_angle_magic1 = GetFloatFromFile (&myfile); 
-  _steer_angle_magic2 = GetFloatFromFile (&myfile); 
-  _steer_angle_magic3 = GetFloatFromFile (&myfile); 
-  _steer_angle_magic4 = GetFloatFromFile (&myfile); 
+  _steer_angle_magic1 = ReadFloat (&myfile); 
+  _steer_angle_magic2 = ReadFloat (&myfile); 
+  _steer_angle_magic3 = ReadFloat (&myfile); 
+  _steer_angle_magic4 = ReadFloat (&myfile); 
   
-  _l_wheel_point      = Getb2Vec2FromFile(&myfile);
-  _r_wheel_point      = Getb2Vec2FromFile(&myfile);
-  _l_rear_wheel_point = Getb2Vec2FromFile(&myfile);
-  _r_rear_wheel_point = Getb2Vec2FromFile(&myfile);
+  _l_wheel_point      = Readb2Vec2(&myfile);
+  _r_wheel_point      = Readb2Vec2(&myfile);
+  _l_rear_wheel_point = Readb2Vec2(&myfile);
+  _r_rear_wheel_point = Readb2Vec2(&myfile);
 
-  _vertices[0] = Getb2Vec2FromFile(&myfile);
-  _vertices[1] = Getb2Vec2FromFile(&myfile);
-  _vertices[2] = Getb2Vec2FromFile(&myfile);
-  _vertices[3] = Getb2Vec2FromFile(&myfile);
-  _vertices[4] = Getb2Vec2FromFile(&myfile);
-  _vertices[5] = Getb2Vec2FromFile(&myfile);
-  _vertices[6] = Getb2Vec2FromFile(&myfile);
-  _vertices[7] = Getb2Vec2FromFile(&myfile);
+  _vertices[0] = Readb2Vec2(&myfile);
+  _vertices[1] = Readb2Vec2(&myfile);
+  _vertices[2] = Readb2Vec2(&myfile);
+  _vertices[3] = Readb2Vec2(&myfile);
+  _vertices[4] = Readb2Vec2(&myfile);
+  _vertices[5] = Readb2Vec2(&myfile);
+  _vertices[6] = Readb2Vec2(&myfile);
+  _vertices[7] = Readb2Vec2(&myfile);
 
   _wheel_config_file = GetLine(&myfile);
 
@@ -137,9 +137,9 @@ void Car::SetKeys(car_control_keys keys) {
   if (keys.left || keys.right) {
     float32 velocity = _body->GetLinearVelocity().Length();
     // magic
-     steer_angle = _steer_angle_magic1 *
-                   atan( velocity/_steer_angle_magic2 - _steer_angle_magic3) +
-                   _steer_angle_magic4;
+    steer_angle = _steer_angle_magic1 *
+                 atan( velocity/_steer_angle_magic2 - _steer_angle_magic3) +
+                 _steer_angle_magic4;
   }
  
   if (keys.left) {
@@ -180,7 +180,6 @@ Wheel::Wheel(Car *car,
   _track = track;
   _car = car;
   
-  
   b2BodyDef body_def;
   body_def.position.Set(x,y);
   body_def.type = b2_dynamicBody;
@@ -220,14 +219,14 @@ Wheel::Wheel(Car *car,
 void Wheel::LoadFile(std::string filename) {
   std::ifstream myfile(filename.c_str());
 
-  _size_x = GetFloatFromFile (&myfile);
-  _size_y = GetFloatFromFile (&myfile);
+  _size_x = ReadFloat (&myfile);
+  _size_y = ReadFloat (&myfile);
 
-  _max_motor_torque = GetFloatFromFile (&myfile);
-  _side_damping     = GetFloatFromFile (&myfile);
-  _linear_damping   = GetFloatFromFile (&myfile);
-  _density          = GetFloatFromFile (&myfile);
-  _friction         = GetFloatFromFile (&myfile);
+  _max_motor_torque = ReadFloat (&myfile);
+  _side_damping     = ReadFloat (&myfile);
+  _linear_damping   = ReadFloat (&myfile);
+  _density          = ReadFloat (&myfile);
+  _friction         = ReadFloat (&myfile);
 
 }
 
@@ -236,13 +235,14 @@ void Wheel::Handling() {
   float32 angle = _body->GetAngle();
   b2Vec2 velocity = _body->GetLinearVelocityFromLocalPoint(b2Vec2(0.0f,0.0f));
   b2Vec2 body_axis = b2Vec2(cos(angle),sin(angle));
+
   b2Vec2 orthogonal_velocity = b2Dot(velocity,body_axis) * body_axis;
   b2Vec2 parallel_velocity = ( velocity - orthogonal_velocity );
 
   b2Vec2 fric_force = _side_damping * orthogonal_velocity;
   b2Vec2 turn_force = _linear_damping * parallel_velocity;
 
-  _body->ApplyForce( -fric_force + _linear_damping * parallel_velocity, _body->GetPosition());
+  _body->ApplyForce( -fric_force + turn_force, _body->GetPosition());
 
 }
 
