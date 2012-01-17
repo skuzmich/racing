@@ -9,8 +9,8 @@ set (
   SDLmain 
 )
 
-set (HEADERS event.h)
-set (SOURCES event.cpp)
+set (HEADERS event.h fileparser.h)
+set (SOURCES event.cpp fileparser.cpp)
 
 set (TESTS ${SOURCES} test.cpp)
 

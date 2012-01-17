@@ -1,4 +1,4 @@
-// Copyright (C) 2011 Kuzmich Svyatoslav <svatoslav1@gmail.com>
+// Copyright (C) 2011-2012 Kuzmich Svyatoslav <svatoslav1@gmail.com>
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -33,12 +33,20 @@ class Car{
     
     float32 _density;
     float32 _friction;
+
+    float32 _steer_angle_magic1;
+    float32 _steer_angle_magic2;
+    float32 _steer_angle_magic3;
+    float32 _steer_angle_magic4;
+
     b2Vec2 _vertices[8];
 
     b2Vec2 _l_wheel_point;
     b2Vec2 _r_wheel_point;
     b2Vec2 _l_rear_wheel_point;
     b2Vec2 _r_rear_wheel_point;
+    std::string _wheel_config_file;
+    void LoadFile(const char* filename);
 
   public:
     
@@ -46,9 +54,7 @@ class Car{
         float32 x,
         float32 y,
         Track *track,
-        float32 horsepowers = 1400,
-        float32 steer_speed = 10,
-        float32 max_steer_angle = 3.1415 / 5.);
+        const char * filename);
 
     ~Car();
     void Loop();
@@ -67,22 +73,25 @@ class Wheel {
     bool _breaking;
     bool _is_rear;
     ObjData _data;
+
+    float32 _size_x;
+    float32 _size_y;
+
     float32 _max_motor_torque;
-    float32 _linear_damping;
     float32 _side_damping;
+    float32 _linear_damping;
     float32 _density;
     float32 _friction;
     
-    float32 _size_x;
-    float32 _size_y;
-	
+    void LoadFile(std::string filename);
 
   public:   
     Wheel(Car *wheel_car,
         float32 x,
         float32 y, 
         bool is_rear,
-        Track *track);
+        Track *track,
+        std::string config_file);
     
     void Handling();
     void Driving();
