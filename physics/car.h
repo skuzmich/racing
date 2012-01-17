@@ -30,6 +30,15 @@ class Car{
     float32 _horsepowers;
     float32 _steer_speed;
     float32 _max_steer_angle;
+    
+    float32 _density;
+    float32 _friction;
+    b2Vec2 _vertices[8];
+
+    b2Vec2 _l_wheel_point;
+    b2Vec2 _r_wheel_point;
+    b2Vec2 _l_rear_wheel_point;
+    b2Vec2 _r_rear_wheel_point;
 
   public:
     
@@ -58,6 +67,15 @@ class Wheel {
     bool _breaking;
     bool _is_rear;
     ObjData _data;
+    float32 _max_motor_torque;
+    float32 _linear_damping;
+    float32 _side_damping;
+    float32 _density;
+    float32 _friction;
+    
+    float32 _size_x;
+    float32 _size_y;
+	
 
   public:   
     Wheel(Car *wheel_car,

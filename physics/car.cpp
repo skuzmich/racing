@@ -25,25 +25,33 @@ Car::Car(b2World *world,
   // Creating body
   b2BodyDef car_body_def;
   car_body_def.position.Set(x,y);
+    
+  _density = 2.0f;
+  _friction = 3.0f;
+
+  _l_wheel_point      = b2Vec2(-3.2f, -4.343f);
+  _r_wheel_point      = b2Vec2(3.2f, -4.343f);
+  _l_rear_wheel_point = b2Vec2(-3.2f, +4.343f);
+  _r_rear_wheel_point = b2Vec2(3.2f, +4.343f);
 
   // Creating body shape
   // TODO: make configurable
-  b2Vec2 vertices[8];
-  vertices[0] = b2Vec2(-3.429f, -5.4864f);
-  vertices[1] = b2Vec2(-2.7432f, -6.4008f);
-  vertices[2] = b2Vec2(-1.6002f, -6.9723f);
-  vertices[3] = b2Vec2(1.6002f, -6.9723f);
-  vertices[4] = b2Vec2(2.7432f, -6.4008f);
-  vertices[5] = b2Vec2(3.429f, -5.4864f);
-  vertices[6] = b2Vec2(3.429f, 5.9436f);
-  vertices[7] = b2Vec2(-3.429f, 5.9436f);
+  _vertices[0] = b2Vec2(-3.429f, -5.4864f);
+  _vertices[1] = b2Vec2(-2.7432f, -6.4008f);
+  _vertices[2] = b2Vec2(-1.6002f, -6.9723f);
+  _vertices[3] = b2Vec2(1.6002f, -6.9723f);
+  _vertices[4] = b2Vec2(2.7432f, -6.4008f);
+  _vertices[5] = b2Vec2(3.429f, -5.4864f);
+  _vertices[6] = b2Vec2(3.429f, 5.9436f);
+  _vertices[7] = b2Vec2(-3.429f, 5.9436f);
    
   b2PolygonShape car_poly_shape;
-  car_poly_shape.Set(vertices, 8);
+  car_poly_shape.Set(_vertices, 8);
 
   b2FixtureDef car_fixture_def;
   car_fixture_def.shape = &car_poly_shape;
-  car_fixture_def.density = 2.0f;
+  car_fixture_def.density = _density;
+  car_fixture_def.friction = _friction;
 
   _data.type = IS_CAR_BODY;
   _data.level = 15;
@@ -55,10 +63,10 @@ Car::Car(b2World *world,
   _body->CreateFixture(&car_fixture_def);
 
   // Creating wheels
-  _left_wheel       = new Wheel(this, x - 3.2f, y - 4.343f, false, _track);
-  _right_wheel      = new Wheel(this, x + 3.2f, y - 4.343f, false, _track);
-  _left_rear_wheel  = new Wheel(this, x - 3.2f, y + 4.343f, true, _track);
-  _right_rear_wheel = new Wheel(this, x + 3.2f, y + 4.343f, true, _track);
+  _left_wheel       = new Wheel(this, _l_wheel_point.x      + x, _l_wheel_point.y      + y, false, _track);
+  _right_wheel      = new Wheel(this, _r_wheel_point.x      + x, _r_wheel_point.y      + y, false, _track);
+  _left_rear_wheel  = new Wheel(this, _l_rear_wheel_point.x + x, _l_rear_wheel_point.y + y, true, _track);
+  _right_rear_wheel = new Wheel(this, _r_rear_wheel_point.x + x, _r_rear_wheel_point.y + y, true, _track);
 }
 
 Car::~Car() {
@@ -74,7 +82,8 @@ void Car::Loop() {
   _right_wheel->Handling();
   _left_rear_wheel->Handling();
   _right_rear_wheel->Handling();
- printf("\n"); 
+  printf("\n"); 
+  printf( "%7.7f ", _body->GetLinearVelocity().Length());
   _left_wheel->Driving();
   _right_wheel->Driving();
 
@@ -94,17 +103,18 @@ car_coordinates Car::GetCoordinates() {
 }
 
 void Car::SetKeys(car_control_keys keys) {
-  if (keys.left) {
+  float32 steer_angle;
+
+  if (keys.left || keys.right) {
     float32 velocity = _body->GetLinearVelocity().Length();
-    float32 steer_angle = (-1 * ( atan( velocity/18. - 2.))/4.14 + 1./2.)*3.14/5.;
-//    printf("Velocity = %6.3f, Steer Angle = %5.3f\n", velocity, steer_angle/3.14);
-    _steering_angle = -steer_angle;
+     steer_angle = (-1 * ( atan( velocity/18. - 2.))/4.14 + 1./2.)*3.14/5.;
   }
  
+  if (keys.left) {
+    _steering_angle = -steer_angle;
+  }
+
   if (keys.right) {
-    float32 velocity = _body->GetLinearVelocity().Length();
-    float32 steer_angle = (-1 * ( atan( velocity/18. - 2.))/4.14 + 1./2. )*3.14/5.;
-////    printf("Velocity = %6.3f, Steer Angle = %5.3f\n", velocity, steer_angle/3.14);
     _steering_angle = +steer_angle;
   }
  
@@ -137,25 +147,31 @@ Wheel::Wheel(Car *car,
   
   // Side of the wheel
   // TODO: make it configurable
-  float32 size_x = 0.4572f;
-  float32 size_y = 1.143f;
+  _size_x = 0.4572f;
+  _size_y = 1.143f;
+
+  _max_motor_torque = 100;
+  _side_damping = 30.;
+  _linear_damping = 2.0f;
+  _density = 1.0f;
+  _friction = 1.0f;
   
   b2BodyDef body_def;
   body_def.position.Set(x,y);
   body_def.type = b2_dynamicBody;
 
   // TODO: make configurable
-  body_def.angularDamping = 1.0f;
-  body_def.linearDamping = 2.5f;
+  //  body_def.angularDamping = 1.0f;
+  body_def.linearDamping = _linear_damping;
   body_def.allowSleep = false;
   _body = _car->_world->CreateBody(&body_def);
 
   b2PolygonShape shape;
-  shape.SetAsBox(size_x, size_y);
+  shape.SetAsBox(_size_x, _size_y);
   b2FixtureDef fixture_def;
   fixture_def.shape = &shape;
-  fixture_def.density = 1.0f;
-  fixture_def.friction = 0.0f;
+  fixture_def.density = _density;
+  fixture_def.friction = _friction;
 
   _data.level = 2;
   _data.type = IS_WHEEL;
@@ -171,7 +187,7 @@ Wheel::Wheel(Car *car,
       joint_def.upperAngle = joint_def.lowerAngle = 0;
     } else {
       joint_def.enableMotor = true;
-      joint_def.maxMotorTorque = 100;
+      joint_def.maxMotorTorque = _max_motor_torque;
     }
 
     _r_joint = (b2RevoluteJoint*) _car->_world->CreateJoint(&joint_def);
@@ -179,25 +195,17 @@ Wheel::Wheel(Car *car,
 
 void Wheel::Handling() {
 
-  float32 friction_k = 100.;
-
   float32 angle = _body->GetAngle();
   b2Vec2 velocity = _body->GetLinearVelocityFromLocalPoint(b2Vec2(0.0f,0.0f));
   b2Vec2 body_axis = b2Vec2(cos(angle),sin(angle));
   b2Vec2 orthogonal_velocity = b2Dot(velocity,body_axis) * body_axis;
   b2Vec2 parallel_velocity = ( velocity - orthogonal_velocity );
-  
-  float32 kin = velocity.LengthSquared();
-  b2Vec2 fric_force = friction_k * orthogonal_velocity;
-  b2Vec2 turn_force = ( (fric_force.Length() * orthogonal_velocity.Length() - kin) / parallel_velocity.LengthSquared() ) * parallel_velocity;
 
-  // nan case 
-  if ( turn_force.x != turn_force.x ) turn_force.x = 0;
-  if ( turn_force.y != turn_force.y ) turn_force.y = 0;
+  b2Vec2 fric_force = _side_damping * orthogonal_velocity;
+  b2Vec2 turn_force = _linear_damping * parallel_velocity;
 
-  printf("(%5.3f, %5.3f)", turn_force.x, turn_force.y); 
+  _body->ApplyForce( -fric_force + _linear_damping * parallel_velocity, _body->GetPosition());
 
-  _body->ApplyForce( -fric_force , _body->GetPosition());
 }
 
 void Wheel::Driving(){

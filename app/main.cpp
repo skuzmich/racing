@@ -31,8 +31,8 @@ int main(int argc, char** argv){
   int32 velIterations = 8;
   int32 posIterations = 3;
 
-  Track * track = new Track(&world, "track.txt");
-  Car * car = new Car(&world, 50.0f, 50.0f,track, 1000, 10, 3.1415f / 10.0f);
+  Track * track = new Track(&world, "track1.txt");
+  Car * car = new Car(&world, 50.0f, 50.0f,track, 300, 30, 3.1415f / 10.0f);
 
   Event new_event; // new_event.running_ is 'true' by default
   

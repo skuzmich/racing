@@ -47,7 +47,7 @@ bool Graphics::Initialize(int scr_w, int scr_h) {
 */
 
   SDL_Color colorkey = {0xFF, 0x00, 0xFF, 0};
-  back_texture_ = LoadGLTexture("./gfx/Track.png", &colorkey);
+  back_texture_ = LoadGLTexture("./gfx/Track1.png", &colorkey);
   assert(back_texture_);
   
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
