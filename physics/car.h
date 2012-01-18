@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2012 Kuzmich Svyatoslav <svatoslav1@gmail.com>
+// opyright (C) 2011-2012 Kuzmich Svyatoslav <svatoslav1@gmail.com>
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -7,7 +7,7 @@
 
 class Wheel;
 class Track;
-struct car_coordinates;
+struct obj_coordinates;
 struct car_control_keys;
 
 class Car {
@@ -46,6 +46,11 @@ class Car {
     b2Vec2 _l_rear_wheel_point;
     b2Vec2 _r_rear_wheel_point;
     std::string _wheel_config_file;
+
+    int32 _sprite_width;
+    int32 _sprite_height;
+    std::string _image_path;
+    
     void LoadFile(std::string filename);
 
   public:
@@ -58,8 +63,13 @@ class Car {
 
     ~Car();
     void Loop();
-    car_coordinates GetCoordinates();
+    obj_coordinates GetCoordinates();
     void SetKeys(car_control_keys keys);
+
+    int32 GetSpriteWidth() { return _sprite_width; }
+    int32 GetSpriteHeight() { return _sprite_height; }
+    std::string GetSpriteImagePath() { return _image_path; }
+
     friend class Wheel;
 };
 

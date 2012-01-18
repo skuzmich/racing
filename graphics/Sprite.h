@@ -16,8 +16,7 @@
 class Sprite {
  public:
   Sprite();
-  Sprite(int x_coord, int y_coord, float angle,
-         int height, int width, GLuint texture);
+  Sprite( int height, int width, GLuint texture);
   ~Sprite();
   void GetCoordinates(int X, int Y, float ang);
   int height();

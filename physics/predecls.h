@@ -17,7 +17,7 @@ struct ObjData{
     int level;
 };
 
-struct car_coordinates{
+struct obj_coordinates{
   float x;
   float y;
   float angle;
@@ -39,5 +39,8 @@ struct car_control_keys{
 #include "Box2D/Box2D.h"
 #include "track.h"
 #include "car.h"
+#include "world.h"
+#include "settings.h"
+#include "renderer.h"
 
 #endif  //  PHYSICS_LIB_PREDECLS_H

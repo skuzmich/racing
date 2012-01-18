@@ -76,12 +76,12 @@ Graphics *Graphics::Create(int scr_w, int scr_h) {
   return NULL;
 }
 
-bool Graphics::AddSprite(int X, int Y, float ang, int h, int w, const char *img){
+bool Graphics::AddSprite(int h, int w, const char *img){
   SDL_Color colorkey = {0xFF, 0x00, 0xFF, 0};
   GLuint tex = LoadGLTexture(img, &colorkey);
 
   if(tex) {
-    Sprite *newsprite = new Sprite(X, Y, ang, h, w, tex);
+    Sprite *newsprite = new Sprite(h, w, tex);
     list_of_sprites_.push_back(newsprite);
     return true;
   } else {

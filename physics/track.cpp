@@ -6,7 +6,7 @@
 #include "fileparser.h"
 
 
-Track::Track(b2World *m_world, const char* track_path) {
+Track::Track(b2World *m_world, std::string track_path) {
     k_restitution = 0.4f;
     world = m_world;
     b2BodyDef bd;
@@ -14,15 +14,15 @@ Track::Track(b2World *m_world, const char* track_path) {
     ground = world->CreateBody(&bd);
 //  sandfield= world->CreateBody(&bd);
     
-    std::ifstream myfile(track_path);
+    std::ifstream fd(track_path.c_str());
     std::vector<float> vec;
-    while ( ! ReadFloatVector(&vec,&myfile, 4))
+    while ( ! ReadFloatVector(&vec, &fd, 4))
         walls_list.push_back(new Wall(vec[0]-5.5, vec[1]-5.5, vec[2]-5.5, vec[3]-5.5, ground));
     
     /*
     // Sandfield Creation
     int count = 3;
-    while (! ReadVector<float>(&vec,&myfile, count * 2)){
+    while (! ReadVector<float>(&vec, &fd, count * 2)){
       printf("Sandfield Created!\n");
       b2Vec2 *vertices = (b2Vec2*) malloc(count * sizeof(b2Vec2));
       for (int i = 0; i < count; i++){
@@ -31,4 +31,5 @@ Track::Track(b2World *m_world, const char* track_path) {
       sandfields_list.push_back(new SandField(vertices,count,this));
     }
     */
+    fd.close();
 }

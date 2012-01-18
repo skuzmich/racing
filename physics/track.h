@@ -22,21 +22,21 @@ public:
     std::vector<Wall*> walls_list;
     std::vector<SandField*> sandfields_list;
     
-    Track(b2World *m_world,const char* track_path );
+    Track(b2World *m_world, std::string track_path );
 };
 
-class Wall{
+class Wall {
   public:
     ObjData data;
-    Wall(float32 x1,float32 y1,float32 x2,float32 y2,b2Body* m_ground){
+    Wall(float32 x1, float32 y1, float32 x2, float32 y2, b2Body* m_ground) {
         ground = m_ground;
         b2PolygonShape shape;
         b2FixtureDef sd;
         sd.shape = &shape;
         sd.restitution = 0.4f;
         
-        data.type=IS_WALL;
-        data.level=1;
+        data.type = IS_WALL;
+        data.level = 1;
         sd.userData = (void*) &data;
 
         shape.SetAsEdge(b2Vec2(x1, y1), b2Vec2(x2, y2));
@@ -46,10 +46,10 @@ private:
     b2Body* ground;
 };
 
-class SandField{
+class SandField {
   public:
     ObjData data;
-    SandField(b2Vec2 *vertices, int size, Track* input_track){
+    SandField(b2Vec2 *vertices, int size, Track* input_track) {
         printf("Constructor sandfield begin!");
         track = input_track;
         b2PolygonShape polygon;

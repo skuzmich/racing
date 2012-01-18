@@ -12,79 +12,32 @@
 #include "event.h"
 
 int main(int argc, char** argv){
+  Settings * settings = new Settings("settings.txt"); 
+  Renderer * renderer = new Renderer(settings);
+  World * world = new World("level.txt", settings, renderer);
+
+  Event event; // new_event.running_ is 'true' by default
   
-  Graphics *gr = Graphics::Create(800, 600);
-  assert(gr);
-  //bool Running = true;
-  
-  gr->InitGPInterface(800, 600, 400, 300);
-  gr->AddSprite(0, 0, 0, 25, 14, "./gfx/car2.png");
-  //gr->AddSprite(512, 384, 30.0f, 32, 17, "./gfx/car2.png");
-    
-  // Define the gravity vector.
-  b2Vec2 gravity(0.0f, 0.0f);
-
-  // Do we want to let bodies sleep?
-  bool doSleep = true;
-
-  // Construct a world object, which will hold and simulate the rigid bodies.
-  b2World world(gravity, doSleep);
-  float32 timeStep = 1.0f / 30.0f;
-  int32 velIterations = 8;
-  int32 posIterations = 3;
-
-  Track * track = new Track(&world, "track1.txt");
-  Car * car = new Car(&world, 50.0f, 50.0f, track, "car.txt");
-
-  Event new_event; // new_event.running_ is 'true' by default
-  
-  while(new_event.running()) {
+  while(event.running()) {
     // Browse all the events (SDL_Events)
     // In case of quit-event, new_event.running_ sets to 'false'
    Uint32 startTime = SDL_GetTicks();
 
-    new_event.CheckEvents();
-    if(new_event.fullscreen()) {
-      gr->FullscreenOn();
-    } else {
-        gr->FullscreenOff();
-      }
-    // After calling CheckEvents(), new_event.control_keys_state_ sets to actual
-    // value according to pressed keys on keyboard
+   event.CheckEvents();
     
-    car_control_keys keys;
-    
-    // Get state of control keys
-    keys = new_event.control_keys_state();
-
-    car->SetKeys(keys);
-    car->Loop();
-
-//    world.SetWarmStarting(1);
-//    world.SetContinuousPhysics(0);
-    world.Step(timeStep, velIterations, posIterations);
-    
-    car_coordinates coordinates = car->GetCoordinates();
-    gr->SetSpriteCoordinates(0,
-                      coordinates.x+2,
-                      coordinates.y,
-                      coordinates.angle + 3.14);
-    gr->Render();
+    world->Update(&event);
+    world->Render();
 
     float time = (float)(SDL_GetTicks() - startTime);
 
     if ( time > 0 && time < 16) 
       SDL_Delay(16 - time);
 
-//    float fps = ( 1./(float)(SDL_GetTicks() - startTime)) *1000;
-//    printf("%7.7f %7.7f\n", fps, (float)(SDL_GetTicks() - startTime));
   }
-
-  gr->CleanUp();
-  delete gr;
+  delete world;
+  delete settings;
+  delete renderer;
   
-  delete track;
-  delete car;
 
   return 0;
 }

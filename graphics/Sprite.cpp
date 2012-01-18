@@ -14,18 +14,17 @@ Sprite::Sprite() {
   width_ = 0;
 }
 
-Sprite::Sprite(int x_coord, int y_coord, float angle,
-               int height, int width, GLuint texture) {
-  x_coord_ = x_coord;
-  y_coord_ = y_coord;
-  angle_ = angle;
+Sprite::Sprite( int height, int width, GLuint texture) {
+  x_coord_ = 0;
+  y_coord_ = 0;
+  angle_   = 0;
   surf_sprite_ = NULL;
   sprite_texture_ = texture;
   height_ = height;
   width_ = width;
 }
 
-void Sprite::GetCoordinates(int X, int Y, float ang){
+void Sprite::GetCoordinates(int X, int Y, float ang) {
   x_coord_ = X;
   y_coord_ = Y;
   angle_ = ang;

@@ -27,8 +27,8 @@ int main(int argc, char* argv[]) {
   assert(gr);
   // Initialization of interface between graphics and physics (GPInterface)
   gr->InitGPInterface(test_w, test_h, test_phys_w, test_phys_h);
-  gr->AddSprite(512, 384, 30.0f, 32, 17, "./gfx/car1.png");
-  gr->AddSprite(512, 384, 30.0f, 32, 17, "./gfx/car2.png");
+  gr->AddSprite(32, 17, "./gfx/car1.png");
+  gr->AddSprite(32, 17, "./gfx/car2.png");
   // Variable coordinates of car
   float cX = 20, cY = 15;
   float ang = 0;

@@ -153,7 +153,7 @@ void Event::OnEvent() {
   }
 }
 
-void Event::set_control_keys_state() {
+void Event::SetControlKeysState() {
     switch(event_.type) {
         
       case SDL_KEYDOWN: {
@@ -179,7 +179,7 @@ void Event::set_control_keys_state() {
     }
 }
 
-car_control_keys Event::control_keys_state() {
+car_control_keys Event::ControlKeysState() {
   return control_keys_state_;
 }
 

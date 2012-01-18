@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 2.6)
 
-set (SOURCES main.cpp)
+set (SOURCES main.cpp world.cpp settings.cpp renderer.cpp)
 
 add_executable (app ${SOURCES})
 

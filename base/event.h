@@ -42,8 +42,8 @@ class Event {
   void OnExit();
   void OnUser(Uint8 type, int code, void* data1, void* data2);
 
-  struct car_control_keys control_keys_state();
-  void set_control_keys_state();
+  struct car_control_keys ControlKeysState();
+  void SetControlKeysState();
   bool running();
   bool fullscreen();
  private:

@@ -75,34 +75,35 @@ Car::~Car() {
 }
 
 void Car::LoadFile(std::string filename) {
-  std::ifstream myfile(filename.c_str());
+  std::ifstream fd(filename.c_str());
 
-  _horsepowers = ReadFloat (&myfile); 
-  _steer_speed = ReadFloat (&myfile); 
-  _density  =    ReadFloat (&myfile); 
-  _friction =    ReadFloat (&myfile); 
+  _horsepowers = ReadFloat (&fd); 
+  _steer_speed = ReadFloat (&fd); 
+  _density  =    ReadFloat (&fd); 
+  _friction =    ReadFloat (&fd); 
 
-  _steer_angle_magic1 = ReadFloat (&myfile); 
-  _steer_angle_magic2 = ReadFloat (&myfile); 
-  _steer_angle_magic3 = ReadFloat (&myfile); 
-  _steer_angle_magic4 = ReadFloat (&myfile); 
+  _steer_angle_magic1 = ReadFloat (&fd); 
+  _steer_angle_magic2 = ReadFloat (&fd); 
+  _steer_angle_magic3 = ReadFloat (&fd); 
+  _steer_angle_magic4 = ReadFloat (&fd); 
   
-  _l_wheel_point      = Readb2Vec2(&myfile);
-  _r_wheel_point      = Readb2Vec2(&myfile);
-  _l_rear_wheel_point = Readb2Vec2(&myfile);
-  _r_rear_wheel_point = Readb2Vec2(&myfile);
+  _l_wheel_point      = Readb2Vec2(&fd);
+  _r_wheel_point      = Readb2Vec2(&fd);
+  _l_rear_wheel_point = Readb2Vec2(&fd);
+  _r_rear_wheel_point = Readb2Vec2(&fd);
 
-  _vertices[0] = Readb2Vec2(&myfile);
-  _vertices[1] = Readb2Vec2(&myfile);
-  _vertices[2] = Readb2Vec2(&myfile);
-  _vertices[3] = Readb2Vec2(&myfile);
-  _vertices[4] = Readb2Vec2(&myfile);
-  _vertices[5] = Readb2Vec2(&myfile);
-  _vertices[6] = Readb2Vec2(&myfile);
-  _vertices[7] = Readb2Vec2(&myfile);
+  _vertices[0] = Readb2Vec2(&fd);
+  _vertices[1] = Readb2Vec2(&fd);
+  _vertices[2] = Readb2Vec2(&fd);
+  _vertices[3] = Readb2Vec2(&fd);
+  _vertices[4] = Readb2Vec2(&fd);
+  _vertices[5] = Readb2Vec2(&fd);
+  _vertices[6] = Readb2Vec2(&fd);
+  _vertices[7] = Readb2Vec2(&fd);
 
-  _wheel_config_file = GetLine(&myfile);
+  _wheel_config_file = GetLine(&fd);
 
+  fd.close();
   std::cout << "Wheel Config File: " << _wheel_config_file << std::endl;
 }
 
@@ -119,8 +120,8 @@ void Car::Loop() {
 }
 
 
-car_coordinates Car::GetCoordinates() {
-  car_coordinates coordinates;
+obj_coordinates Car::GetCoordinates() {
+  obj_coordinates coordinates;
   b2Vec2 b2coordinates = _body->GetPosition();
   float32 b2angle = _body->GetAngle();
   
@@ -217,16 +218,18 @@ Wheel::Wheel(Car *car,
 }
 
 void Wheel::LoadFile(std::string filename) {
-  std::ifstream myfile(filename.c_str());
+  std::ifstream fd(filename.c_str());
 
-  _size_x = ReadFloat (&myfile);
-  _size_y = ReadFloat (&myfile);
+  _size_x = ReadFloat (&fd);
+  _size_y = ReadFloat (&fd);
 
-  _max_motor_torque = ReadFloat (&myfile);
-  _side_damping     = ReadFloat (&myfile);
-  _linear_damping   = ReadFloat (&myfile);
-  _density          = ReadFloat (&myfile);
-  _friction         = ReadFloat (&myfile);
+  _max_motor_torque = ReadFloat (&fd);
+  _side_damping     = ReadFloat (&fd);
+  _linear_damping   = ReadFloat (&fd);
+  _density          = ReadFloat (&fd);
+  _friction         = ReadFloat (&fd);
+
+  fd.close();
 
 }
 

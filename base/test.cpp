@@ -20,7 +20,7 @@ int main() {
     } else {
         printf("Should be window mode\n");
       }
-    tmp = my_event.control_keys_state();
+    tmp = my_event.ControlKeysState();
     printf("%d %d %d %d\n", tmp.up, tmp.down, tmp.right, tmp.left);
     SDL_Delay(100);
   }
