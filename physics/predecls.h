@@ -12,15 +12,17 @@
 #define IS_DYNAMIC_OBJ  4
 #define IS_SPECIAL      5
 
+#include "Box2D/Box2D.h"
+
 struct ObjData {
     int type;
     int level;
 };
 
 struct obj_coordinates {
-  float x;
-  float y;
-  float angle;
+  float32 x;
+  float32 y;
+  float32 angle;
 };
 
 struct car_control_keys {
@@ -30,7 +32,6 @@ struct car_control_keys {
   bool down;
 };
 
-#include "Box2D/Box2D.h"
 #include "./track.h"
 #include "./car.h"
 

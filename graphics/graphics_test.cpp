@@ -18,8 +18,8 @@ void SetCoords(int *X, int *Y, float *a){
 
 int main(int argc, char* argv[]) {
   // Some parameters for testing
-  int test_w = 1024;
-  int test_h = 768;
+  int test_w = 800;
+  int test_h = 600;
   int test_phys_w = 400;
   int test_phys_h = 300;
   

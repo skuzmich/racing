@@ -1,0 +1,10 @@
+#Size
+0.4572 # Size x
+1.143  # Size y
+#
+100 # max_motor_torque
+50  # side_damping
+2.0 # linear_damping
+1.0 # density
+1.0 # friction
+

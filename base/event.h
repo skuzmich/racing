@@ -2,11 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef _EVENT_H_
-#define _EVENT_H_
-  
+#ifndef BASE_EVENT_H_
+#define BASE_EVENT_H_
+
 #include <SDL.h>
-#include "predecls.h"
+#include "../physics/predecls.h"
 
 class Event {
  public:
@@ -14,7 +14,6 @@ class Event {
   ~Event();
   void CheckEvents();
   void OnEvent();
-  
   void OnInputFocus();
   void OnInputBlur();
   void OnKeyDown(SDLKey sym, SDLMod mod, Uint16 unicode);
@@ -37,15 +36,15 @@ class Event {
   void OnJoyBall(Uint8 which, Uint8 ball, Sint16 xrel, Sint16 yrel);
   void OnMinimize();
   void OnRestore();
-  void OnResize(int w,int h);
+  void OnResize(int w, int h);
   void OnExpose();
   void OnExit();
   void OnUser(Uint8 type, int code, void* data1, void* data2);
-
   struct car_control_keys ControlKeysState();
   void SetControlKeysState();
   bool running();
   bool fullscreen();
+
  private:
   car_control_keys control_keys_state_;
   bool running_;
@@ -53,4 +52,4 @@ class Event {
   SDL_Event event_;
 };
 
-#endif
+#endif  // BASE_EVENT_H_

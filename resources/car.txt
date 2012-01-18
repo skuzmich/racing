@@ -1,0 +1,29 @@
+400    # Horsepowers
+30     # Steer speed
+2.0    # Density
+3.0    # Friction
+#
+# Steering angle magic
+-0.152 # 1
+18.0   # 2
+2.0    # 3
+0.314  # 4
+#
+# Wheels positions
+-3.2 -4.343 # Left Wheel Point
+3.2 -4.343  # Right Wheel Point
+-3.2 4.343  # Left Rear Wheel Point
+3.2 4.343   # Right Rear Wheel Point
+#
+# Car body points
+-3.429 -5.4864
+-2.7432 -6.4008
+-1.6002 -6.9723
+1.6002 -6.9723
+2.7432 -6.4008
+3.429 -5.4864
+3.429 5.9436
+-3.429 5.9436
+#
+#Wheel File(Without Spaces)
+./wheel.txt

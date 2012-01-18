@@ -63,7 +63,9 @@ bool Graphics::Initialize(int scr_w, int scr_h) {
 
   glLoadIdentity();
   
-  SDL_WM_SetCaption("MIPT racing game","MIPT racing game");
+  SDL_Surface* icon = SDL_LoadBMP("icon.bmp");
+  SDL_WM_SetIcon(icon, NULL);
+  SDL_WM_SetCaption("2D Racing","2D racing");
 
   return true;
 }
@@ -133,32 +135,25 @@ void Graphics::BlitSprite(int i) {
 	GLint wreal, hreal;
 	GLint xpad=0, ypad=0;
 		
-	//if(IsNPOT(sprite->w, sprite->h)) {
 		wreal = (int)powf(2.0, ceilf(logf((float)list_of_sprites_[i]->width())/logf(2.0f)));
 		hreal = (int)powf(2.0, ceilf(logf((float)list_of_sprites_[i]->height())/logf(2.0f)));
 		xpad = (wreal - list_of_sprites_[i]->width())/2;
 		ypad = (hreal - list_of_sprites_[i]->height())/2;
-	//} else {
-	//	wreal = sprite->w;
-	//	hreal = sprite->h;
-	//}	
 		
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	
 	glMatrixMode(GL_TEXTURE);
 	glPushMatrix();
-    glLoadIdentity();
-    glOrtho(0, 2*wreal, 0, 2*hreal, -1, 1);
+        glLoadIdentity();
+        glOrtho(0, 2*wreal, 0, 2*hreal, -1, 1);
 	
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
 	
-	glTranslatef(list_of_sprites_[i]->x_coord() + list_of_sprites_[i]->width()/2,
-              list_of_sprites_[i]->y_coord() + list_of_sprites_[i]->height()/2, 0);
+	glTranslatef(list_of_sprites_[i]->x_coord(), list_of_sprites_[i]->y_coord(), 0);
 	glRotatef(list_of_sprites_[i]->angle(), 0, 0, 1);
-	//glScalef(sprite->xsize, sprite->ysize, 0);
 
 	glBindTexture(GL_TEXTURE_2D, list_of_sprites_[i]->sprite_texture());
 	glBegin(GL_QUADS);

@@ -2,12 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "event.h"
+#include "./event.h"
 
 Event::Event() {
   running_ = true;
   fullscreen_ = false;
-  
+
   control_keys_state_.up = false;
   control_keys_state_.down = false;
   control_keys_state_.left = false;
@@ -18,30 +18,36 @@ Event::~Event() {
 }
 
 void Event::CheckEvents() {
-  while(SDL_PollEvent(&event_)){
+  while (SDL_PollEvent(&event_)) {
     OnEvent();
   }
 }
 
 void Event::OnEvent() {
-  switch(event_.type) {
+  switch (event_.type) {
     case SDL_ACTIVEEVENT: {
-      switch(event_.active.state) {
+      switch (event_.active.state) {
         case SDL_APPMOUSEFOCUS: {
-          if (event_.active.gain) OnMouseFocus();
-          else OnMouseBlur();
+          if (event_.active.gain)
+            OnMouseFocus();
+          else
+            OnMouseBlur();
 
           break;
         }
         case SDL_APPINPUTFOCUS: {
-          if (event_.active.gain) OnInputFocus();
-          else OnInputBlur();
+          if (event_.active.gain)
+            OnInputFocus();
+          else
+            OnInputBlur();
 
           break;
         }
         case SDL_APPACTIVE: {
-          if (event_.active.gain) OnRestore();
-          else OnMinimize();
+          if (event_.active.gain)
+            OnRestore();
+          else
+            OnMinimize();
 
           break;
         }
@@ -50,35 +56,42 @@ void Event::OnEvent() {
     }
 
     case SDL_KEYDOWN: {
-      OnKeyDown(event_.key.keysym.sym,event_.key.keysym.mod,event_.key.keysym.unicode);
+      OnKeyDown(event_.key.keysym.sym,
+                event_.key.keysym.mod,
+                event_.key.keysym.unicode);
       break;
     }
 
     case SDL_KEYUP: {
-      OnKeyUp(event_.key.keysym.sym,event_.key.keysym.mod,event_.key.keysym.unicode);
+      OnKeyUp(event_.key.keysym.sym,
+              event_.key.keysym.mod,
+              event_.key.keysym.unicode);
       break;
     }
 
     case SDL_MOUSEMOTION: {
-      OnMouseMove(event_.motion.x,event_.motion.y,event_.motion.xrel,
-        event_.motion.yrel,(event_.motion.state&SDL_BUTTON(SDL_BUTTON_LEFT))!=0,
-        (event_.motion.state&SDL_BUTTON(SDL_BUTTON_RIGHT))!=0,
-        (event_.motion.state&SDL_BUTTON(SDL_BUTTON_MIDDLE))!=0);
+      OnMouseMove(event_.motion.x,
+                  event_.motion.y,
+                  event_.motion.xrel,
+                  event_.motion.yrel,
+                  event_.motion.state&SDL_BUTTON(SDL_BUTTON_LEFT)   != 0,
+                  event_.motion.state&SDL_BUTTON(SDL_BUTTON_RIGHT)  != 0,
+                  event_.motion.state&SDL_BUTTON(SDL_BUTTON_MIDDLE) != 0);
       break;
     }
 
     case SDL_MOUSEBUTTONDOWN: {
-      switch(event_.button.button) {
+      switch (event_.button.button) {
         case SDL_BUTTON_LEFT: {
-          OnLButtonDown(event_.button.x,event_.button.y);
+          OnLButtonDown(event_.button.x, event_.button.y);
           break;
         }
         case SDL_BUTTON_RIGHT: {
-          OnRButtonDown(event_.button.x,event_.button.y);
+          OnRButtonDown(event_.button.x, event_.button.y);
           break;
         }
         case SDL_BUTTON_MIDDLE: {
-          OnMButtonDown(event_.button.x,event_.button.y);
+          OnMButtonDown(event_.button.x, event_.button.y);
           break;
         }
       }
@@ -86,17 +99,17 @@ void Event::OnEvent() {
     }
 
     case SDL_MOUSEBUTTONUP: {
-      switch(event_.button.button) {
+      switch (event_.button.button) {
         case SDL_BUTTON_LEFT: {
-          OnLButtonUp(event_.button.x,event_.button.y);
+          OnLButtonUp(event_.button.x, event_.button.y);
           break;
         }
         case SDL_BUTTON_RIGHT: {
-          OnRButtonUp(event_.button.x,event_.button.y);
+          OnRButtonUp(event_.button.x, event_.button.y);
           break;
         }
         case SDL_BUTTON_MIDDLE: {
-          OnMButtonUp(event_.button.x,event_.button.y);
+          OnMButtonUp(event_.button.x, event_.button.y);
           break;
         }
       }
@@ -104,26 +117,33 @@ void Event::OnEvent() {
     }
 
     case SDL_JOYAXISMOTION: {
-      OnJoyAxis(event_.jaxis.which,event_.jaxis.axis,event_.jaxis.value);
+      OnJoyAxis(event_.jaxis.which, event_.jaxis.axis, event_.jaxis.value);
       break;
     }
 
     case SDL_JOYBALLMOTION: {
-      OnJoyBall(event_.jball.which,event_.jball.ball,event_.jball.xrel,event_.jball.yrel);
+      OnJoyBall(event_.jball.which,
+                event_.jball.ball,
+                event_.jball.xrel,
+                event_.jball.yrel);
       break;
     }
 
     case SDL_JOYHATMOTION: {
-      OnJoyHat(event_.jhat.which,event_.jhat.hat,event_.jhat.value);
+      OnJoyHat(event_.jhat.which,
+               event_.jhat.hat,
+               event_.jhat.value);
       break;
     }
     case SDL_JOYBUTTONDOWN: {
-      OnJoyButtonDown(event_.jbutton.which,event_.jbutton.button);
+      OnJoyButtonDown(event_.jbutton.which,
+                      event_.jbutton.button);
       break;
     }
 
     case SDL_JOYBUTTONUP: {
-      OnJoyButtonUp(event_.jbutton.which,event_.jbutton.button);
+      OnJoyButtonUp(event_.jbutton.which,
+                    event_.jbutton.button);
       break;
     }
 
@@ -137,7 +157,8 @@ void Event::OnEvent() {
     }
 
     case SDL_VIDEORESIZE: {
-      OnResize(event_.resize.w,event_.resize.h);
+      OnResize(event_.resize.w,
+               event_.resize.h);
       break;
     }
 
@@ -147,36 +168,37 @@ void Event::OnEvent() {
     }
 
     default: {
-      OnUser(event_.user.type,event_.user.code,event_.user.data1,event_.user.data2);
+      OnUser(event_.user.type,
+             event_.user.code,
+             event_.user.data1,
+             event_.user.data2);
       break;
     }
   }
 }
 
 void Event::SetControlKeysState() {
-    switch(event_.type) {
-        
-      case SDL_KEYDOWN: {
-        switch(event_.key.keysym.sym) {
-          case SDLK_UP: control_keys_state_.up = true; break;
-          case SDLK_DOWN: control_keys_state_.down = true; break;
-          case SDLK_LEFT: control_keys_state_.left = true; break;
-          case SDLK_RIGHT: control_keys_state_.right = true; break;
-        }
-        break;
+  switch (event_.type) {
+    case SDL_KEYDOWN: {
+      switch (event_.key.keysym.sym) {
+        case SDLK_UP: control_keys_state_.up = true; break;
+        case SDLK_DOWN: control_keys_state_.down = true; break;
+        case SDLK_LEFT: control_keys_state_.left = true; break;
+        case SDLK_RIGHT: control_keys_state_.right = true; break;
       }
-
-      case SDL_KEYUP: {
-        switch(event_.key.keysym.sym) {
-          case SDLK_UP: control_keys_state_.up = false; break;
-          case SDLK_DOWN: control_keys_state_.down = false; break;
-          case SDLK_LEFT: control_keys_state_.left = false; break;
-          case SDLK_RIGHT: control_keys_state_.right = false; break;
-        }
-        break;
-      }
-      
+      break;
     }
+
+    case SDL_KEYUP: {
+      switch (event_.key.keysym.sym) {
+        case SDLK_UP: control_keys_state_.up = false; break;
+        case SDLK_DOWN: control_keys_state_.down = false; break;
+        case SDLK_LEFT: control_keys_state_.left = false; break;
+        case SDLK_RIGHT: control_keys_state_.right = false; break;
+      }
+      break;
+    }
+  }
 }
 
 car_control_keys Event::ControlKeysState() {
@@ -198,7 +220,7 @@ void Event::OnInputBlur() {
 }
 
 void Event::OnKeyDown(SDLKey sym, SDLMod mod, Uint16 unicode) {
-  switch(sym) {
+  switch (sym) {
     case SDLK_UP: control_keys_state_.up = true; break;
     case SDLK_DOWN: control_keys_state_.down = true; break;
     case SDLK_LEFT: control_keys_state_.left = true; break;
@@ -210,7 +232,7 @@ void Event::OnKeyDown(SDLKey sym, SDLMod mod, Uint16 unicode) {
 }
 
 void Event::OnKeyUp(SDLKey sym, SDLMod mod, Uint16 unicode) {
-  switch(sym) {
+  switch (sym) {
     case SDLK_UP: control_keys_state_.up = false; break;
     case SDLK_DOWN: control_keys_state_.down = false; break;
     case SDLK_LEFT: control_keys_state_.left = false; break;
@@ -224,7 +246,10 @@ void Event::OnMouseFocus() {
 void Event::OnMouseBlur() {
 }
 
-void Event::OnMouseMove(int mX, int mY, int relX, int relY, bool Left,bool Right,bool Middle) {
+void Event::OnMouseMove(int mX, int mY,
+                        int relX, int relY,
+                        bool Left, bool Right,
+                        bool Middle) {
 }
 
 void Event::OnMouseWheel(bool Up, bool Down) {
@@ -248,19 +273,19 @@ void Event::OnMButtonDown(int mX, int mY) {
 void Event::OnMButtonUp(int mX, int mY) {
 }
 
-void Event::OnJoyAxis(Uint8 which,Uint8 axis,Sint16 value) {
+void Event::OnJoyAxis(Uint8 which, Uint8 axis, Sint16 value) {
 }
 
-void Event::OnJoyButtonDown(Uint8 which,Uint8 button) {
+void Event::OnJoyButtonDown(Uint8 which, Uint8 button) {
 }
 
-void Event::OnJoyButtonUp(Uint8 which,Uint8 button) {
+void Event::OnJoyButtonUp(Uint8 which, Uint8 button) {
 }
 
-void Event::OnJoyHat(Uint8 which,Uint8 hat,Uint8 value) {
+void Event::OnJoyHat(Uint8 which, Uint8 hat, Uint8 value) {
 }
 
-void Event::OnJoyBall(Uint8 which,Uint8 ball,Sint16 xrel,Sint16 yrel) {
+void Event::OnJoyBall(Uint8 which, Uint8 ball, Sint16 xrel, Sint16 yrel) {
 }
 
 void Event::OnMinimize() {
@@ -269,7 +294,7 @@ void Event::OnMinimize() {
 void Event::OnRestore() {
 }
 
-void Event::OnResize(int w,int h) {
+void Event::OnResize(int w, int h) {
 }
 
 void Event::OnExpose() {

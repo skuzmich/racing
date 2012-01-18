@@ -15,19 +15,15 @@ Track::Track(b2World *m_world, std::string track_path) {
     b2BodyDef bd;
     bd.position.Set(0.0f, 0.0f);
     ground = world->CreateBody(&bd);
-//  sandfield= world->CreateBody(&bd);
 
     std::ifstream fd(track_path.c_str());
     std::vector<float> vec;
     while (!ReadFloatVector(&vec, &fd, 4))
-        walls_list.push_back(new Wall(vec[0]-5.5,
-                                      vec[1]-5.5,
-                                      vec[2]-5.5,
-                                      vec[3]-5.5,
-                                      ground));
+        walls_list.push_back(new Wall(vec[0], vec[1], vec[2], vec[3], ground));
 
     /*
     // Sandfield Creation
+    sandfield= world->CreateBody(&bd);
     int count = 3;
     while (! ReadVector<float>(&vec, &fd, count * 2)){
       printf("Sandfield Created!\n");

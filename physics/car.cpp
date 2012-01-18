@@ -124,12 +124,10 @@ void Car::Loop() {
 
 obj_coordinates Car::GetCoordinates() {
   obj_coordinates coordinates;
-  b2Vec2 b2coordinates = _body->GetPosition();
-  float32 b2angle = _body->GetAngle();
 
-  coordinates.x = static_cast<float>(b2coordinates(0));
-  coordinates.y = static_cast<float>(b2coordinates(1));
-  coordinates.angle = static_cast<float>(b2angle);
+  coordinates.x = _body->GetPosition().x;
+  coordinates.y = _body->GetPosition().y;
+  coordinates.angle = _body->GetAngle();
 
   return coordinates;
 }

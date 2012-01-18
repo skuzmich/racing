@@ -9,6 +9,7 @@
 #include <vector>
 #include "./settings.h"
 #include "./renderer.h"
+#include "../physics/objects.h"
 
 class Settings;
 class Event;
@@ -21,7 +22,7 @@ class World {
   Track   *_track;
   Renderer *_renderer;
   std::vector<Car *> _cars;
-// std::vector<Object *> _objects;
+  std::vector<Box *> _boxes;
 
  public:
   World(std::string config_file_path, Settings *settings, Renderer * renderer);

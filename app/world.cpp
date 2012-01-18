@@ -59,6 +59,30 @@ World::World(std::string config_file_path,
     _cars.push_back(new Car(_world, pos.x, pos.y, _track, car_config_path));
   }
 
+  int number_of_boxes = ReadInt(&fd);
+  std::cout << "Number of boxes: " << number_of_boxes << std::endl;
+
+  // Creating cars in the world
+  for (int i = 0; i < number_of_boxes; i++) {
+    std::string box_config_path = GetLine(&fd);
+    std::string box_image_path = GetLine(&fd);
+
+    int32 sprite_width = ReadInt(&fd);
+    int32 sprite_height = ReadInt(&fd);
+
+    std::cout << "  Box config path: " << box_config_path << std::endl;
+    std::cout << "  Box image  path: " << box_image_path  << std::endl;
+    std::cout << "  Box sprite size: " << sprite_width << ":"
+              << sprite_height  << std::endl;
+
+    _renderer->AddSprite(sprite_width, sprite_height, box_image_path);
+
+    b2Vec2 pos = Readb2Vec2(&fd);
+    _boxes.push_back(new Box(_world, pos.x, pos.y, box_config_path));
+    
+    std::cout << " All Boxes: Created! " << std::endl;
+  }
+
   fd.close();
 }
 
@@ -91,7 +115,19 @@ void World::Render() {
   for (int i = 0; i < _cars.size(); i++) {
     obj_coordinates coordinates = _cars[i]->GetCoordinates();
     _renderer->SetSpriteCoordinates(i,
-                      coordinates.x+2,
+                      coordinates.x,
+                      coordinates.y,
+                      coordinates.angle + 3.14);
+  }
+  
+  for (int i = _cars.size(); i < _cars.size() + _boxes.size(); i++) {
+    obj_coordinates coordinates = _boxes[i - _cars.size()]->GetCoordinates();
+
+//    std::cout << coordinates.x << ":" << coordinates.y << ":" 
+//              << coordinates.angle << std::endl;
+
+    _renderer->SetSpriteCoordinates(i,
+                      coordinates.x,
                       coordinates.y,
                       coordinates.angle + 3.14);
   }
