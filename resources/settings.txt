@@ -1,0 +1,9 @@
+0.033333 # Time step
+8        # Vel Iterations
+3        # Pos Iterations
+62.5     # FPS
+#
+800      # Graphics Width
+600      # Graphics Height
+400      # Physics Height
+300      # Physics Height
