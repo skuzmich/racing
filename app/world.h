@@ -2,8 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef APP_WORLD_H
-#define APP_WORLD_H
+#ifndef APP_WORLD_H_
+#define APP_WORLD_H_
+
+#include <string>
+#include <vector>
+#include "./settings.h"
+#include "./renderer.h"
+
 class Settings;
 class Event;
 class Renderer;
@@ -16,14 +22,18 @@ class World {
   Renderer *_renderer;
   std::vector<Car *> _cars;
 // std::vector<Object *> _objects;
- 
 
  public:
-  void Update(Event *event);
-  std::vector<Car *> GetCars() { return _cars; }
-  void Render();
   World(std::string config_file_path, Settings *settings, Renderer * renderer);
   ~World();
+
+  // Getting input and calculating physics for next frame
+  void Update(Event *event);
+
+  // Renderig all objects in the world ;)
+  void Render();
+
+  std::vector<Car *> GetCars() { return _cars; }
 };
 
-#endif /* APP_WORLD_H */
+#endif  // APP_WORLD_H_

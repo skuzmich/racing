@@ -2,8 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "predecls.h"
-#include "fileparser.h"
+#include <fstream>
+#include <string>
+#include <vector>
+#include "./predecls.h"
+#include "../base/fileparser.h"
 
 
 Track::Track(b2World *m_world, std::string track_path) {
@@ -13,12 +16,16 @@ Track::Track(b2World *m_world, std::string track_path) {
     bd.position.Set(0.0f, 0.0f);
     ground = world->CreateBody(&bd);
 //  sandfield= world->CreateBody(&bd);
-    
+
     std::ifstream fd(track_path.c_str());
     std::vector<float> vec;
-    while ( ! ReadFloatVector(&vec, &fd, 4))
-        walls_list.push_back(new Wall(vec[0]-5.5, vec[1]-5.5, vec[2]-5.5, vec[3]-5.5, ground));
-    
+    while (!ReadFloatVector(&vec, &fd, 4))
+        walls_list.push_back(new Wall(vec[0]-5.5,
+                                      vec[1]-5.5,
+                                      vec[2]-5.5,
+                                      vec[3]-5.5,
+                                      ground));
+
     /*
     // Sandfield Creation
     int count = 3;

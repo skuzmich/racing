@@ -1,34 +1,47 @@
-#include "predecls.h"
-#include "fileparser.h"
-#include "world.h"
-#include "event.h"
-#include "Graphics.h"
+// Copyright (C) 2012 Kuzmich Svyatoslav <svatoslav1@gmail.com>
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
 
+#include <string>
+#include <iostream>
+#include <fstream>
 
-World::World(std::string config_file_path, Settings * settings, Renderer * renderer ) {
+#include "../physics/predecls.h"
+#include "../base/fileparser.h"
+#include "./world.h"
+#include "../base/event.h"
+#include "../graphics/Graphics.h"
+
+World::World(std::string config_file_path,
+             Settings * settings,
+             Renderer * renderer) {
   _renderer = renderer;
   _settings = settings;
 
+  // Opening config file
   std::ifstream fd(config_file_path.c_str());
 
   b2Vec2 gravity = Readb2Vec2(&fd);
 
-  // TODO: Make configurable;
+  // TODO(svatoslav1): Make configurable;
   bool do_sleep  = true;
 
+  // Creating Box2D world
   _world = new b2World(gravity, true);
 
   std::string track_config_path = GetLine(&fd);
   std::string track_image_path  = GetLine(&fd);
-  
+
   std::cout << "Track config path: " << track_config_path << std::endl;
   std::cout << "Track image  path: " << track_image_path  << std::endl;
 
+  // Track consist of static objects like walls
   _track = new Track(_world, track_config_path);
 
-  int number_of_cars = ReadInt(&fd); 
+  int number_of_cars = ReadInt(&fd);
   std::cout << "Number of cars: " << number_of_cars << std::endl;
 
+  // Creating cars in the world
   for (int i = 0; i < number_of_cars; i++) {
     std::string car_config_path = GetLine(&fd);
     std::string car_image_path = GetLine(&fd);
@@ -44,8 +57,8 @@ World::World(std::string config_file_path, Settings * settings, Renderer * rende
 
     b2Vec2 pos = Readb2Vec2(&fd);
     _cars.push_back(new Car(_world, pos.x, pos.y, _track, car_config_path));
-
   }
+
   fd.close();
 }
 
@@ -55,23 +68,23 @@ World::~World() {
 }
 
 void World::Update(Event *event) {
-   
-  if(event->fullscreen()) {
+  if (event->fullscreen()) {
     _renderer->_graphics->FullscreenOn();
   } else {
     _renderer->_graphics->FullscreenOff();
   }
 
+  // Finding pressed keys and applying it to all the cars
   for (int i = 0; i < _cars.size(); i++) {
     car_control_keys keys = event->ControlKeysState();
     _cars[i]->SetKeys(keys);
     _cars[i]->Loop();
   }
 
-  _world->Step(_settings->GetTimeStep(), 
-               _settings->GetVelIterations(), 
+  // Box2D step ( calculating physics )
+  _world->Step(_settings->GetTimeStep(),
+               _settings->GetVelIterations(),
                _settings->GetPosIterations());
-
 }
 
 void World::Render() {
@@ -83,5 +96,4 @@ void World::Render() {
                       coordinates.angle + 3.14);
   }
   _renderer->Render();
-
 }

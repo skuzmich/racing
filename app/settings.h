@@ -2,8 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef APP_SETTINGS_H
-#define APP_SETTINGS_H
+#ifndef APP_SETTINGS_H_
+#define APP_SETTINGS_H_
+
+#include <string>
 
 /* Structure of global game settings */
 class Settings {
@@ -15,9 +17,9 @@ class Settings {
 
   int32 _graph_width;
   int32 _graph_height;
-  int32 _phys_width ;
-  int32 _phys_height ;
-  
+  int32 _phys_width;
+  int32 _phys_height;
+
  public:
   float32 GetTimeStep() { return _time_step; }
   int32 GetVelIterations() { return _vel_iterations; }
@@ -29,9 +31,8 @@ class Settings {
   int32 GetPhysWidth()   { return _phys_width  ; }
   int32 GetPhysHeight()  { return _phys_height ; }
 
-  Settings(std::string config_file_path);
+  explicit Settings(std::string config_file_path);
   ~Settings() {}
-
 };
 
-#endif /* APP_SETTINGS_H */
+#endif  // APP_SETTINGS_H_
