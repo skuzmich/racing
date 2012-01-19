@@ -6,7 +6,7 @@ set (
   BASE_LIBRARIES
 
   ${SDL_LIBRARY}
-  SDLmain 
+  ${SDLMAIN_LIBRARY} 
 )
 
 set (HEADERS event.h fileparser.h)

@@ -118,7 +118,7 @@ int ReadInt(std::ifstream *myfile) {
 }
 
 b2Vec2 Readb2Vec2(std::ifstream *myfile) {
-  b2Vec2 val = b2Vec2(1./0., 2./0.);
+  b2Vec2 val = b2Vec2(0., 0.);
   std::string line;
 
   if (myfile->is_open() && myfile->good()) {

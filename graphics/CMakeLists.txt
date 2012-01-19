@@ -10,8 +10,8 @@ set (
 
   ${SDL_LIBRARY}
   ${SDLIMAGE_LIBRARY} 
-  SDLmain 
-  GL
+  ${SDLMAIN_LIBRARY}
+  ${GL_LIBRARY}
 )
 
 set (HEADERS Graphics.h Sprite.h GPInterface.h loading_functions.h)
@@ -27,10 +27,11 @@ set (
 
 set (TESTS ${SOURCES} graphics_test.cpp)
 
-
-if ( NOT SDL_FOUND )
-  message ( FATAL_ERROR "SDL not found!" )
-endif ( NOT SDL_FOUND )
+if(UNIX)
+    if ( NOT SDL_FOUND )
+        message ( FATAL_ERROR "SDL not found!" )
+    endif ( NOT SDL_FOUND )
+endif(UNIX)
 
 link_libraries ( ${GRAPHICS_LIBRARYS} )
 
