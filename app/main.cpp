@@ -36,12 +36,6 @@ int main(int argc, char** argv) {
 
     world->Update(&event);
     world->Render();
-
-    float time = static_cast<float>((SDL_GetTicks() - startTime));
-
-    // FPS - control
-    if ( time > 0 && time < 1000./settings->GetFPS())
-      SDL_Delay(1000./settings->GetFPS() - time);
   }
 
   delete world;

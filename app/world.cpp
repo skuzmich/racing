@@ -79,7 +79,7 @@ World::World(std::string config_file_path,
 
     b2Vec2 pos = Readb2Vec2(&fd);
     _boxes.push_back(new Box(_world, pos.x, pos.y, box_config_path));
-    
+
     std::cout << " All Boxes: Created! " << std::endl;
   }
 
@@ -119,12 +119,9 @@ void World::Render() {
                       coordinates.y,
                       coordinates.angle + 3.14);
   }
-  
+
   for (int i = _cars.size(); i < _cars.size() + _boxes.size(); i++) {
     obj_coordinates coordinates = _boxes[i - _cars.size()]->GetCoordinates();
-
-//    std::cout << coordinates.x << ":" << coordinates.y << ":" 
-//              << coordinates.angle << std::endl;
 
     _renderer->SetSpriteCoordinates(i,
                       coordinates.x,

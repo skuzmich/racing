@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-if(UNIX)
-	set(BOX2D_INSTALL_BY_DEFAULT ON)
-else(UNIX)
-	set(BOX2D_INSTALL_BY_DEFAULT OFF)
-endif(UNIX)
+set(BOX2D_INSTALL_BY_DEFAULT ON)
 
 option(BOX2D_INSTALL "Install Box2D libs, includes, and CMake scripts" ${BOX2D_INSTALL_BY_DEFAULT})
 option(BOX2D_INSTALL_DOC "Install Box2D documentation" OFF)

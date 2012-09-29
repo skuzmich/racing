@@ -3,21 +3,23 @@
 // found in the LICENSE file.
 
 #ifndef _GRAPHICS_H_
-  #define _GRAPHICS_H_
+#define _GRAPHICS_H_
 
-#include "Sprite.h"
-#include "GPInterface.h"
-
-
+#include <math.h>
+#include <assert.h>
 #include <vector>
+#include <string>
+#include "./Sprite.h"
+#include "./GPInterface.h"
+#include "./loading_functions.h"
+#include "./Text.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_opengl.h>
+#include <SDL_ttf.h>
 #include <GL/gl.h>
 
-#include <math.h>
-#include <assert.h>
 
 class Graphics {
   private:
@@ -27,6 +29,9 @@ class Graphics {
     GLuint back_texture_;
     std::vector<class Sprite *> list_of_sprites_;
     bool fullscreen_;
+    TTF_Font* font;
+    int scr_w_;
+    int scr_h_;
   public:
     static Graphics *Create(int scr_w, int scr_h);
     Graphics();
@@ -45,4 +50,4 @@ class Graphics {
     void FullscreenOff();
 };
 
-#endif
+#endif // _GRAPHICS_H_

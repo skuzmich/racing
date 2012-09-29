@@ -13,43 +13,25 @@ INCLUDE_DIRECTORIES(app)
 set (RESOURCES_FILES ${CMAKE_CURRENT_SOURCE_DIR}/build/track.txt)
 
 if(UNIX)
-    add_custom_command(    	
-        OUTPUT ${RESOURCES_FILES} 
-
-        COMMAND echo "Copying resources files..."    	
-        COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/resources/*  ${CMAKE_CURRENT_SOURCE_DIR}/build/
-    )
+  add_custom_command(OUTPUT ${RESOURCES_FILES} 
+    COMMAND echo "Copying resources files..."    	
+    COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/resources/*  ${CMAKE_CURRENT_SOURCE_DIR}/build/
+  )
 endif()	
 
 add_custom_target(track_file ALL DEPENDS ${RESOURCES_FILES}) 
 
-#adding SLD include directories
 if(UNIX)
-    add_definitions(`sdl-config --cflags`)
-    set (SDLMAIN_LIBRARY SDLmain)
-    set (GL_LIBRARY GL)
-
-elseif(WIN32)
-    set (SDLIMAGE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL/SDL_image-1.2.10/include)
-    set (SDLIMAGE_LIBRARY     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL/SDL_image-1.2.10/lib/SDL_image.lib)
-    set (SDLMAIN_LIBRARY      ${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL/SDL-1.2.14/lib/SDLmain.lib)
-    set (SDL_INCLUDE_LIBRARY  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL/SDL-1.2.14/include)
-    set (SDL_LIBRARY_TEMP     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL/SDL-1.2.14/lib/SDL.lib)
-    set (GL_LIBRARY opengl32.lib )
-
-    INCLUDE_DIRECTORIES(${SDLIMAGE_INCLUDE_DIR})
-    INCLUDE_DIRECTORIES(${SDL_INCLUDE_LIBRARY})
+  add_definitions(`sdl-config --cflags`)
+  set (SDLMAIN_LIBRARY SDLmain)
+  set (GL_LIBRARY GL)
 else()
-    # Something wrong
+    message(FATAL_ERROR "Wrong host system!")
 endif()
 
-#include_directories("${PROJECT_BINARY_DIR}")
-
-add_subdirectory (graphics)
-add_subdirectory (base)
-
-# Third Party
+#adding SLD include directories
+add_subdirectory(graphics)
+add_subdirectory(base)
 add_subdirectory(third_party)
-
-add_subdirectory (physics)
-add_subdirectory (app)
+add_subdirectory(physics)
+add_subdirectory(app)
