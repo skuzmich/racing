@@ -1,0 +1,8 @@
+# Box
+2.5 # width
+2.5 # height
+#
+2.0 # linear damping
+2.0 # angular damping
+#
+./gfx/box.png
