@@ -1,10 +1,10 @@
-400    # Horsepowers
-30     # Steer speed
+700    # Horsepowers
+10     # Steer speed
 2.0    # Density
 3.0    # Friction
 #
 # Steering angle magic
--0.152 # 1
+-0.252 # 1
 18.0   # 2
 2.0    # 3
 0.314  # 4

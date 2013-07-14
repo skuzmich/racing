@@ -37,7 +37,7 @@ class Graphics {
     Graphics();
     ~Graphics();
     bool Initialize(int scr_w, int scr_h);
-    bool InitGPInterface(int gr_w, int gr_h, int ph_w, int ph_h);
+    bool InitGPInterface(GPInterface * gpi);
     bool AddSprite(int h, int w, const char *img);
     bool SetSpriteCoordinates(int i /*number of sprite in list*/,
                               float X, float Y, float ang);

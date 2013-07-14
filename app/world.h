@@ -10,6 +10,7 @@
 #include "./settings.h"
 #include "./renderer.h"
 #include "../physics/objects.h"
+#include "../graphics/debug_draw.h"
 
 class Settings;
 class Event;
@@ -21,11 +22,13 @@ class World {
   b2World *_world;
   Track   *_track;
   Renderer *_renderer;
+  DebugDraw *_debug_draw;
+  GPInterface *_gpi;
   std::vector<Car *> _cars;
   std::vector<Box *> _boxes;
 
  public:
-  World(std::string config_file_path, Settings *settings, Renderer * renderer);
+  World(std::string config_file_path, Settings *settings, Renderer * renderer, GPInterface * gpi);
   ~World();
 
   // Getting input and calculating physics for next frame

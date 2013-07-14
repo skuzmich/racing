@@ -7,6 +7,7 @@
 
 #include <string>
 #include "./settings.h"
+#include "../graphics/GPInterface.h"
 
 class Graphics;
 class Settings;
@@ -19,7 +20,7 @@ class Renderer {
   Settings *_settings;
 
  public:
-  explicit Renderer(Settings * settings);
+  explicit Renderer(Settings * settings, GPInterface * gpi);
   ~Renderer();
   void Render();
   void SetSpriteCoordinates(int32 num, float32 x, float32 y, float32 al);

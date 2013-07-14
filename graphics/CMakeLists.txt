@@ -29,7 +29,8 @@ set (HEADERS
   Sprite.h
   GPInterface.h
   loading_functions.h
-  Text.h)
+  Text.h
+  debug_draw.h)
 
 set (SOURCES
   Sprite.cpp
@@ -37,6 +38,7 @@ set (SOURCES
   loading_functions.cpp
   GPInterface.cpp
   Text.cpp
+  debug_draw.cpp
 )
 
 link_libraries (${GRAPHICS_LIBRARYS})

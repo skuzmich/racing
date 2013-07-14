@@ -105,7 +105,6 @@ bool Graphics::SetSpriteCoordinates(int i, float X, float Y, float ang) {
   }
 }
 void Graphics::BlitBack() {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glBindTexture(GL_TEXTURE_2D, back_texture_);
   glColor3f(1, 1, 1);
@@ -114,19 +113,19 @@ void Graphics::BlitBack() {
   glBegin(GL_QUADS);
   // Top-left vertex (corner)
   glTexCoord2i(0, 0);
-  glVertex2f(0, 0);
+  glVertex2f(gpi_->x0, gpi_->y0);
 
   // Bottom-left vertex (corner)
   glTexCoord2i(1, 0);
-  glVertex2f(surf_display_->w, 0);
+  glVertex2f(gpi_->x1, gpi_->y0);
 
   // Bottom-right vertex (corner)
   glTexCoord2i(1, 1);
-  glVertex2f(surf_display_->w, surf_display_->h);
+  glVertex2f(gpi_->x1, gpi_->y1);
 
   // Top-right vertex (corner)
   glTexCoord2i(0, 1);
-  glVertex2f(0, surf_display_->h);
+  glVertex2f(gpi_->x0, gpi_->y1);
 
   glEnd();
 }
@@ -134,18 +133,21 @@ void Graphics::BlitBack() {
 void Graphics::BlitSprite(int i) {
     GLint wreal, hreal;
     GLint xpad = 0, ypad = 0;
+    int w = static_cast<int>(list_of_sprites_[i]->width() * gpi_->scale_);
+    int h = static_cast<int>(list_of_sprites_[i]->height() * gpi_->scale_);
+//    printf("%i, %i\n",w,h);
 
     // TODO(svatoslav1): Clean up this mess and comment
     wreal = static_cast<int>(powf(2.0,
-                ceilf(logf(static_cast<float>(list_of_sprites_[i]->width()))
+                ceilf(logf(static_cast<float>(w))
                     / logf(2.0f))));
 
     hreal = static_cast<int>(powf(2.0,
-                ceilf(logf(static_cast<float>(list_of_sprites_[i]->height()))
+                ceilf(logf(static_cast<float>(h))
                     / logf(2.0f))));
 
-    xpad = (wreal - list_of_sprites_[i]->width()) / 2;
-    ypad = (hreal - list_of_sprites_[i]->height()) / 2;
+    xpad = (wreal - w) / 2;
+    ypad = (hreal - h) / 2;
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
@@ -169,18 +171,18 @@ void Graphics::BlitSprite(int i) {
     glBegin(GL_QUADS);
     glColor3f(1.0f, 1.0f, 1.0f);
     glTexCoord2d(xpad, ypad);
-    glVertex2d(-list_of_sprites_[i]->width() / 2,
-               -list_of_sprites_[i]->height() / 2);
-    glTexCoord2d(xpad + list_of_sprites_[i]->width(), ypad);
-    glVertex2d(list_of_sprites_[i]->width() / 2,
-               -list_of_sprites_[i]->height() / 2);
-    glTexCoord2d(xpad + list_of_sprites_[i]->width(),
-                 ypad + list_of_sprites_[i]->height());
-    glVertex2d(list_of_sprites_[i]->width() / 2,
-               list_of_sprites_[i]->height() / 2);
-    glTexCoord2d(xpad, ypad + list_of_sprites_[i]->height());
-    glVertex2d(-list_of_sprites_[i]->width() / 2,
-                list_of_sprites_[i]->height() / 2);
+    glVertex2d(-w / 2,
+               -h / 2);
+    glTexCoord2d(xpad + w, ypad);
+    glVertex2d(w / 2,
+               -h / 2);
+    glTexCoord2d(xpad + w,
+                 ypad + h);
+    glVertex2d(w / 2,
+               h / 2);
+    glTexCoord2d(xpad, ypad + h);
+    glVertex2d(-w / 2,
+                h / 2);
     glEnd();
 
     glPopMatrix();
@@ -207,10 +209,11 @@ void Graphics::Render() {
     BlitSprite(i);
   }
 
-  glViewport(-list_of_sprites_[0]->x_coord() * 4 + scr_w_ / 2,
-             list_of_sprites_[0]->y_coord() * 4-scr_h_ * 3 - scr_h_ / 2,
-             scr_w_ * 4,
-             scr_h_ * 4);
+// See what is wrong
+//  glViewport(-list_of_sprites_[0]->x_coord() * 4 + scr_w_ / 2,
+//              list_of_sprites_[0]->y_coord() * 4 - scr_h_ * 3 - scr_h_ / 2,
+//             scr_w_ * 4,
+//             scr_h_ * 4);
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -219,7 +222,7 @@ void Graphics::Render() {
   fps_str << "fps: " << fps;
   DrawTextGL(1, 1, font, fps_str.str());
 
-  SDL_GL_SwapBuffers();
+//  SDL_GL_SwapBuffers();
 }
 
 Graphics::Graphics() {
@@ -261,14 +264,6 @@ void Graphics::FullscreenOff() {
 }
 
 
-bool Graphics::InitGPInterface(int gr_w, int gr_h, int ph_w, int ph_h) {
-  GPInterface *tmp = new GPInterface();
-  if (tmp) {
-    if (tmp->Init(gr_w, gr_h, ph_w, ph_h)) {
-      gpi_ = tmp;
-      return true;
-    }
-  }
-  delete tmp;
-  return false;
+bool Graphics::InitGPInterface( GPInterface * gpi) {
+    this->gpi_ = gpi;
 }

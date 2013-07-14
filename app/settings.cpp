@@ -21,6 +21,8 @@ Settings::Settings(std::string config_file_path) {
   _graph_height    = ReadInt(&fd);
   _phys_width      = ReadInt(&fd);
   _phys_height     = ReadInt(&fd);
+  _debug_draw      = ReadInt(&fd);
+  _graphics_draw   = ReadInt(&fd);
 
   std::cout << "Global Settings: \n";
   std::cout << "Time Step: " << _time_step << std::endl;
@@ -32,6 +34,8 @@ Settings::Settings(std::string config_file_path) {
   std::cout << "Graphics Height: " << _graph_height << std::endl;
   std::cout << "Physics Height : " << _phys_width   << std::endl;
   std::cout << "Physics Height : " << _phys_height  << std::endl;
+  std::cout << "Debug Draw     : " << _debug_draw   << std::endl;
+  std::cout << "Graphics Draw  : " << _graphics_draw<< std::endl;
 
   std::cout << std::endl;
 

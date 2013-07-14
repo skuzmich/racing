@@ -1,9 +1,13 @@
 0.033333 # Time step
-8        # Vel Iterations
-3        # Pos Iterations
-62.5     # FPS
+60        # Vel Iterations
+60        # Pos Iterations
+662.5     # FPS
 #
-800      # Graphics Width
+#1366     # Graphics Width
+#768      # Graphics Height
+800     # Graphics Width
 600      # Graphics Height
-400      # Physics Height
+400      # Physics Width
 300      # Physics Height
+1        # DebugDraw
+1        # GraphicsDraw

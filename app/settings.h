@@ -20,6 +20,9 @@ class Settings {
   int32 _phys_width;
   int32 _phys_height;
 
+  bool _debug_draw;
+  bool _graphics_draw;
+
  public:
   float32 GetTimeStep() { return _time_step; }
   int32 GetVelIterations() { return _vel_iterations; }
@@ -30,6 +33,9 @@ class Settings {
   int32 GetGraphHeight() { return _graph_height; }
   int32 GetPhysWidth()   { return _phys_width  ; }
   int32 GetPhysHeight()  { return _phys_height ; }
+
+  bool GetDebugDraw() { return _debug_draw; }
+  bool GetGraphicsDraw() { return _graphics_draw; }
 
   explicit Settings(std::string config_file_path);
   ~Settings() {}

@@ -5,28 +5,42 @@
 #include "./GPInterface.h"
 
 GPInterface::GPInterface() {
-  scale_x_ = 1.0;
-  scale_y_ = 1.0;
+  scale_ = 1.0;
+  x0 = y0 = 0.0;
 }
 
 GPInterface::~GPInterface() {
 }
 
-bool GPInterface::Init(int gr_w, int gr_h, int ph_w, int ph_h) {
-  if (ph_w == 0) return false;
-  if (ph_h == 0) return false;
-  scale_x_ = static_cast<float>(gr_w) / static_cast<float>(ph_w);
-  scale_y_ = static_cast<float>(gr_h) / static_cast<float>(ph_h);
-  return true;
+GPInterface::GPInterface(int gr_w, int gr_h, int ph_w, int ph_h) {
+  float gr_w_f =  static_cast<float>(gr_w);
+  float gr_h_f =  static_cast<float>(gr_h);
+  float ph_w_f =  static_cast<float>(ph_w);
+  float ph_h_f =  static_cast<float>(ph_h);
+
+  float aspect_gr = gr_w_f / gr_h_f;
+  float aspect_ph = ph_w_f / ph_h_f;
+
+  if (aspect_gr >= aspect_ph) {
+      scale_ = gr_h_f / ph_h_f;
+      y0 = 0;
+      x0 = static_cast<int>((gr_w_f - ph_w_f * scale_) / 2);
+  } else {
+      scale_ = gr_w_f / ph_w_f;
+      x0 = 0;
+      y0 = static_cast<int>((gr_h_f - ph_h_f * scale_) / 2);
+  }
+  x1 = gr_w - x0;
+  y1 = gr_h - y0;
 }
 
 // TODO(horoshenkih): do these functions inline (?)
 int GPInterface::gr_x(float phys_x) {
-  return static_cast<int>(phys_x * scale_x_);
+  return static_cast<int>(phys_x * scale_) + x0;
 }
 
 int GPInterface::gr_y(float phys_y) {
-  return static_cast<int>(phys_y * scale_y_);
+  return static_cast<int>(phys_y * scale_) + y0;
 }
 
 float GPInterface::gr_ang(float phys_ang) {

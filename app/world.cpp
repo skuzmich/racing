@@ -11,12 +11,15 @@
 #include "./world.h"
 #include "../base/event.h"
 #include "../graphics/Graphics.h"
+#include "../graphics/debug_draw.h"
 
 World::World(std::string config_file_path,
              Settings * settings,
-             Renderer * renderer) {
+             Renderer * renderer,
+             GPInterface * gpi) {
   _renderer = renderer;
   _settings = settings;
+  _gpi = gpi;
 
   // Opening config file
   std::ifstream fd(config_file_path.c_str());
@@ -28,6 +31,11 @@ World::World(std::string config_file_path,
 
   // Creating Box2D world
   _world = new b2World(gravity, true);
+  _debug_draw = new DebugDraw();
+  _debug_draw->SetFlags(0x0001);
+  _debug_draw->gpi = gpi;
+  _world->SetDebugDraw(_debug_draw);
+
 
   std::string track_config_path = GetLine(&fd);
   std::string track_image_path  = GetLine(&fd);
@@ -87,6 +95,7 @@ World::World(std::string config_file_path,
 }
 
 World::~World() {
+  delete _debug_draw;
   delete _world;
   delete _track;
 }
@@ -128,5 +137,14 @@ void World::Render() {
                       coordinates.y,
                       coordinates.angle + 3.14);
   }
-  _renderer->Render();
+
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  if (_settings->GetGraphicsDraw())
+      _renderer->Render();
+
+  if (_settings->GetDebugDraw())
+      _world->DrawDebugData();
+
+  SDL_GL_SwapBuffers();
 }

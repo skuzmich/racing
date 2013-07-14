@@ -8,16 +8,15 @@
 #include "../graphics/Graphics.h"
 #include "./renderer.h"
 
-Renderer::Renderer(Settings *settings) {
+Renderer::Renderer(Settings *settings, GPInterface *gpi) {
   _settings = settings;
   _graphics = Graphics::Create(settings->GetGraphWidth(),
                                settings->GetGraphHeight());
 
   assert(_graphics);
-  _graphics->InitGPInterface(settings->GetGraphWidth(),
-                            settings->GetGraphHeight(),
-                            settings->GetPhysWidth(),
-                            settings->GetPhysHeight());
+
+  _graphics->InitGPInterface( gpi);
+
 }
 
 bool Renderer::AddSprite(int32 w, int32 h, std::string image_path) {

@@ -17,11 +17,15 @@ int main(int argc, char** argv) {
   // Loading global game settings
   Settings * settings = new Settings("settings.txt");
 
+  GPInterface * gpi = new GPInterface(settings->GetGraphWidth(),
+                            settings->GetGraphHeight(),
+                            settings->GetPhysWidth(),
+                            settings->GetPhysHeight());
   // Prepearing graphics part
-  Renderer * renderer = new Renderer(settings);
+  Renderer * renderer = new Renderer(settings, gpi);
 
   // Creating world for level.txt and gluing it to renderer
-  World * world = new World("level.txt", settings, renderer);
+  World * world = new World("level.txt", settings, renderer, gpi);
 
   Event event;  // new_event.running_ is 'true' by default
 
