@@ -14,3 +14,4 @@ track.cpp
 objects.cpp)
 
 add_library (physics_lib ${HEADERS} ${SOURCES})
+add_executable (pacejka_test pacejka.cpp pacejka_test.cpp ../base/fileparser.cpp)

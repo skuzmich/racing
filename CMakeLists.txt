@@ -4,6 +4,8 @@ cmake_minimum_required(VERSION 2.6)
 
 project (racing2d)
 
+set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
+
 INCLUDE_DIRECTORIES(physics)
 INCLUDE_DIRECTORIES(third_party)
 INCLUDE_DIRECTORIES(graphics)
